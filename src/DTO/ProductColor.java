@@ -4,22 +4,20 @@ public class ProductColor {
     private int productColorId;
     private int productId;
     private int colorId;
-    private String url1,url2;
+    private String url;
 
     public ProductColor(){}
-    public ProductColor(int productColorId, int productId, int colorId,String url1,String url2) {
+    public ProductColor(int productColorId, int productId, int colorId,String url) {
         this.productColorId = productColorId;
         this.productId = productId;
         this.colorId = colorId;
-        this.url1 = url1;
-        this.url2=url2;
+        this.url = url;
     }
     public ProductColor(ProductColor d) {
         this.productColorId = d.productColorId;
         this.productId = d.productId;
         this.colorId = d.colorId;
-        this.url1=d.url1;
-        this.url2=d.url2;
+        this.url=d.url;
     }
 
     public int getProductColorId() { return productColorId; }
@@ -28,7 +26,7 @@ public class ProductColor {
     public void setProductId(int productId) { this.productId = productId; }
     public int getColorId() { return colorId; }
     public void setColorId(int colorId) { this.colorId = colorId; }
-    public String getURL1(){return url1;}
-    public String getURL2(){return url2;}
+    public String getURL(){return url;}
+
 
 }

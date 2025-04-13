@@ -119,9 +119,10 @@ public class ProductBUS {
         }
         return productdao.updateProduct(p);
     }
-    public List<Product> searchProduct(String s)
+    public List<Product> searchProduct(Category cat,Material mat,Brand bra,Gender gen,String keyword)
     {
-        return productdao.searchProduct(s);
+
+        return productdao.filterProduct(cat, mat, bra, gen,keyword);
     }
 
 

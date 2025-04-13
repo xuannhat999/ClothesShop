@@ -1,11 +1,16 @@
 package DAO;
 
+import DTO.Brand;
+import DTO.Category;
+import DTO.Gender;
+import DTO.Material;
 import DTO.Product;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,27 +187,72 @@ public class ProductDAO {
         }
         return false;
     }
-    public List<Product>  searchProduct(String keyword)
+
+    public List<Product> filterProduct(Category cat,Material mat,Brand bra,Gender gen,String keyword)
     {
-        String sql="select * from product where lower(product_name) like (?)";
+        String sql ="select * from product "+
+                    "where (? is null or category_id =?) "+
+                    "and (? is null or material_id = ?) "+
+                    "and (? is null or brand_id = ?) "+
+                    "and (? is null or gender = ?) "+
+                    "and (lower(product_name) like (?))";
         List<Product> pl = new ArrayList<>();
         try{
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stm = conn.prepareStatement(sql);
-            stm.setString(1,"%"+keyword+"%");
+            if(cat!=null)
+            {
+                stm.setInt(1,cat.getCategoryId());
+                stm.setInt(2,cat.getCategoryId());
+            }
+            else 
+            {
+                stm.setNull(1,Types.INTEGER);
+                stm.setNull(2,Types.INTEGER);
+            }
+            if(mat!=null)
+            {
+                stm.setInt(3,mat.getMaterialId());
+                stm.setInt(4,mat.getMaterialId());
+            }
+            else
+            {
+                stm.setNull(3,Types.INTEGER);
+                stm.setNull(4,Types.INTEGER);
+            }
+
+            if(bra!=null)
+            {
+                stm.setInt(5,bra.getBrandId());
+                stm.setInt(6,bra.getBrandId());
+            }
+            else 
+            {
+                stm.setNull(5,Types.INTEGER);
+                stm.setNull(6,Types.INTEGER);
+            }
+
+            if(gen!=null)
+            {
+                stm.setInt(7,gen.getGenderId());
+                stm.setInt(8,gen.getGenderId());
+            }
+            else{
+                stm.setNull(7,Types.INTEGER);
+                stm.setNull(8,Types.INTEGER);
+            }
+            stm.setString(9,"%"+keyword+"%");
             ResultSet rs = stm.executeQuery();
             while(rs.next())
             {
-                pl.add(new Product(
-                    rs.getInt("product_id"),
-                    rs.getString("product_name"),
-                    rs.getInt("category_id"),
-                    rs.getInt("material_id"),
-                    rs.getString("description"),
-                    rs.getBigDecimal("price"),
-                    rs.getInt("brand_id"),
-                    rs.getInt("gender")
-                ));
+                pl.add(new Product(rs.getInt("product_id"),
+                                    rs.getString("product_name"),
+                                    rs.getInt("category_id"),
+                                    rs.getInt("material_id"),
+                                    rs.getString("description"),
+                                    rs.getBigDecimal("price"),
+                                    rs.getInt("brand_id"),
+                                    rs.getInt("gender")));
             }
         }catch(SQLException e)
         {

@@ -7,12 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainFrame extends JFrame {
-    private int roleid;
+    private int userid;
     private JPanel header,leftmenu,main;
     private CardLayout cardlayout;
-    public MainFrame(int roleid)
+    public MainFrame(int userid)
     {
-        this.roleid = roleid;
+        this.userid = userid;
         init();
     }
     private void init()
@@ -27,13 +27,18 @@ public class MainFrame extends JFrame {
         header = new Header(this);
         add(header, BorderLayout.NORTH);
 
-        leftmenu = new LeftMenu(roleid);
+        leftmenu = new LeftMenu(userid);
         add(leftmenu,BorderLayout.WEST);
 
         cardlayout = new CardLayout();
         main = new JPanel(cardlayout);
-        main.add(new ProductPanel(roleid),0);
+        main.add(new ShoppingPanel(userid),"1");
+        main.add(new ProductPanel(userid),"2");
         add(main,BorderLayout.CENTER);
         setVisible(true);
+    }
+    public void changeFeature(String index)
+    {
+        cardlayout.show(main,index);
     }
 }

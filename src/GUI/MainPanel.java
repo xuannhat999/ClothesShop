@@ -11,15 +11,15 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class MainPanel extends JPanel{
-    protected int roleid;
+    protected int userid;
     protected JPanel pnlcon3,pnlcon4,pnlcon5;
-    protected RoundedPanel pnlimage,pnlcon1,pnlcon2;
-    protected RoundedButton btnsave,btnadd,btnremove,btnupdate,btncancel,btnfind,btnfilter;
+    protected RoundedPanel pnlcon1,pnlcon2;
+    protected RoundedButton btnsave,btnadd,btnremove,btnupdate,btncancel,btnfind,btnfilter,btndetail;
     protected JTextField txfsearch;
 
-    public MainPanel(int roleid)
+    public MainPanel(int userid)
     {
-        this.roleid = roleid;
+        this.userid = userid;
         init();
     }
     private void init()
@@ -30,18 +30,6 @@ public class MainPanel extends JPanel{
         gbc.insets = new Insets(5  , 5, 5, 5);
 
         // PANEL Image
-        pnlimage = new RoundedPanel(20);
-        pnlimage.setBackground(Theme.light1);
-        pnlimage.setBorder(new EmptyBorder(10,10,10,10));
-        pnlimage.setBorderWidth(1);
-        pnlimage.setBorderColor(Theme.brown);
-        pnlimage.setPanelSize(320, 320);
-        gbc.gridx=0;
-        gbc.gridy=0;
-        gbc.weightx=0;
-        gbc.weighty=0;
-        gbc.gridwidth=1;
-        add(pnlimage,gbc);
 
         // PANEL 1
         pnlcon1 = new RoundedPanel(20);
@@ -50,7 +38,7 @@ public class MainPanel extends JPanel{
         pnlcon1.setBorder(new EmptyBorder(10,10,10,10));
         pnlcon1.setBorderWidth(1);
         pnlcon1.setBorderColor(Theme.brown);
-        gbc.gridx=1;
+        gbc.gridx=0;
         gbc.weightx=2;
         gbc.weighty=1;
 
@@ -64,7 +52,8 @@ public class MainPanel extends JPanel{
         pnlcon2.setBorder(new EmptyBorder(10,10,10,10));
         pnlcon2.setBorderWidth(1);
         pnlcon2.setBorderColor(Theme.brown);
-        gbc.gridx=2;
+        pnlcon2.setMinimumSize(new Dimension(200,200));
+        gbc.gridx=1;
         gbc.weightx=1;
         add(pnlcon2,gbc);
 
@@ -100,7 +89,7 @@ public class MainPanel extends JPanel{
         gbc.gridy=0;
         gbc.weightx=1;
         gbc.weighty=0;
-        gbc.gridwidth=3;
+        gbc.gridwidth=4;
         pnlcon2.add(pnlsearch,gbc);
 
         txfsearch = new JTextField();
@@ -123,7 +112,7 @@ public class MainPanel extends JPanel{
 
         btnadd = new RoundedButton("Thêm", 20);
         btnadd.setBackground(Theme.brown);
-        btnadd.setButtonSize(80, 40);
+        btnadd.setButtonSize(70, 40);
         btnadd.setForeground(Color.white);
         gbc.gridx=0;
         gbc.gridy=1;
@@ -136,7 +125,7 @@ public class MainPanel extends JPanel{
         btnremove.setBackground(Theme.light1);
         btnremove.setBorderWidth(1);
         btnremove.setBorderColor(Theme.brown);
-        btnremove.setButtonSize(80, 40);
+        btnremove.setButtonSize(70, 40);
         gbc.gridx=1;
         pnlcon2.add(btnremove,gbc);
         btnremove.setVisible(false);
@@ -145,10 +134,19 @@ public class MainPanel extends JPanel{
         btnupdate.setBackground(Theme.light1);
         btnupdate.setBorderWidth(1);
         btnupdate.setBorderColor(Theme.brown);
-        btnupdate.setButtonSize(80  , 40);
+        btnupdate.setButtonSize(70  , 40);
         gbc.gridx=2;
         pnlcon2.add(btnupdate,gbc);
         btnupdate.setVisible(false);
+
+        btndetail = new RoundedButton("Chi tiết",20);
+        btndetail.setBackground(Theme.light1);
+        btndetail.setBorderWidth(1);
+        btndetail.setBorderColor(Theme.brown);
+        btndetail.setButtonSize(70,40);
+        gbc.gridx=3;
+        pnlcon2.add(btndetail,gbc);
+        btndetail.setVisible(false);
 
         btncancel = new RoundedButton("Hủy", 20);
         btncancel.setBackground(Theme.light1);

@@ -6,23 +6,31 @@ import DTO.Category;
 import DTO.Gender;
 import DTO.Material;
 import DTO.Product;
+import GUI.FilterPanel.FilterDialog;
+import GUI.FilterPanel.ProductFilterPanel;
 import utils.InputParser;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.logging.Filter;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.PopupFactory;
+import javax.swing.SwingContainer;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -36,9 +44,11 @@ public class ProductPanel extends MainPanel{
     private JComboBox <Gender> cbbgender;
     private JTable tblproduct;
     private DefaultTableModel mdlproduct;
+    private ProductFilterPanel pfp;
+    private FilterDialog filter;
     private ProductBUS productbus = new ProductBUS();
-    public ProductPanel(int roleid) {
-        super(roleid);
+    public ProductPanel(int userid) {
+        super(userid);
         init();
     }
     private void init()
@@ -72,7 +82,7 @@ public class ProductPanel extends MainPanel{
         pnlcon1.add(lblproductid,gbc);
 
         lblproductname = new JLabel("Tên sản phẩm");
-        lblproductname.setBorder(Theme.emptyborder);
+        lblproductname.setBorder(new EmptyBorder(0,0,0,0));
         gbc.gridy = 2;
         pnlcon1.add(lblproductname,gbc);
 
@@ -155,6 +165,11 @@ public class ProductPanel extends MainPanel{
         setEditable(false);
         btnsave.setVisible(false);
         btncancel.setVisible(false);
+
+        pfp = new ProductFilterPanel();
+        filter = new FilterDialog(SwingUtilities.getWindowAncestor(ProductPanel.this), pfp);
+        filter.setVisible(false);
+
         addEvent();
 
     }
@@ -230,6 +245,7 @@ public class ProductPanel extends MainPanel{
     }
     private void addEvent()
     {
+
         ActionListener al = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -293,7 +309,7 @@ public class ProductPanel extends MainPanel{
                                 JOptionPane.showMessageDialog(null, "Chưa chọn đầy đủ thông tin");
                                 return;
                             }
-                            BigDecimal price =InputParser.parseBigDecimal(txfprice.getText(), "Giá sản phẩm");
+                            BigDecimal price = InputParser.parseBigDecimal(txfprice.getText(), "Giá sản phẩm");
                             if(price == null)
                             {
                                 return;
@@ -319,18 +335,22 @@ public class ProductPanel extends MainPanel{
                 }
                 else if(e.getSource() == btnfind)
                 {
-                    loadDataTable(productbus.searchProduct(txfsearch.getText()));
+                    loadDataTable(productbus.searchProduct(pfp.getSelectedCategory(),pfp.getSelectedMaterial(),pfp.getSelectedBrand(),pfp.getSelectedGender(),txfsearch.getText()));
+                }
+                else if(e.getSource()==btnfilter)
+                {
+                    filter.setVisible(true);
                 }
             }
             
         };
-      
         btnadd.addActionListener(al);
         btnremove.addActionListener(al);
         btnupdate.addActionListener(al);
         btnsave.addActionListener(al);
         btncancel.addActionListener(al);
         btnfind.addActionListener(al);
+        btnfilter.addActionListener(al);
 
         tblproduct.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -341,6 +361,7 @@ public class ProductPanel extends MainPanel{
                     loadProductInfo();
                     btnupdate.setVisible(true);
                     btnremove.setVisible(true);
+                    btndetail.setVisible(true);
                 }
             }
         });

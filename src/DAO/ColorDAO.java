@@ -2,6 +2,7 @@ package DAO;
 
 import DTO.PColor;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,14 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorDAO {
+    public ColorDAO(){
+        
+    }
+
     public PColor getColorFromId(int id)
     {
         PColor color = null;
         String sql = "select * from color where color_id = ?";
         try{
             Connection conn = DatabaseConnection.getConnection();
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery(sql);
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,id);
+            ResultSet rs = stm.executeQuery();
             while(rs.next())
             {
                 color = new PColor(

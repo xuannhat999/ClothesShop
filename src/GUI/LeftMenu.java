@@ -8,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class LeftMenu extends JPanel{
     private int roleid;
@@ -41,6 +42,10 @@ public class LeftMenu extends JPanel{
         {
             FeatureButton featurebutton = new FeatureButton(i.getFeatureId());
             add(featurebutton);
+            featurebutton.addActionListener(e->{
+                MainFrame mframe = (MainFrame) SwingUtilities.getWindowAncestor(this);
+                mframe.changeFeature(Integer.toString(i.getFeatureId()));
+            });
         }
     }
 }
