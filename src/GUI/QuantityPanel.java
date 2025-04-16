@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -31,6 +32,7 @@ public class QuantityPanel extends JPanel{
         
         txfquan = new JTextField();
         txfquan.setPreferredSize(new Dimension(2*height,height));
+        txfquan.setHorizontalAlignment(SwingConstants.CENTER);
         txfquan.setText(Integer.toString(quantity));
         add(txfquan,BorderLayout.CENTER);
 
@@ -123,6 +125,17 @@ public class QuantityPanel extends JPanel{
     private void updateDisplayQuantity()
     {
         txfquan.setText(Integer.toString(quantity));
+    }
+    public void setQuantity(int quan)
+    {
+        quantity = quan;
+        updateDisplayQuantity();
+    }
+    public void setEditableQuanPanel(boolean a)
+    {
+        btndequan.setEnabled(a);
+        btninquan.setEnabled(a);
+        txfquan.setEditable(a);
     }
 
 }

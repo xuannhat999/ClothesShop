@@ -1,8 +1,10 @@
 package GUI;
 
+import BUS.CartBUS;
 import BUS.ProductBUS;
 import BUS.ProductVariantBUS;
 import DAO.ProductColorDAO;
+import DTO.Cart;
 import DTO.Product;
 import DTO.ProductColor;
 import DTO.ProductVariant;
@@ -15,6 +17,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -23,6 +27,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -40,10 +45,13 @@ public class ProductDetailPanel extends JDialog{
     private List<SizeCheckBox> sizecheckbox = new ArrayList<>();
     private QuantityPanel pnlquan;
     private RoundedButton btnorder,btnaddtocart;
-    public ProductDetailPanel(Window window,Product p)
+    private int userid;
+    private CartBUS cartbus = new CartBUS();
+    public ProductDetailPanel(Window window,Product p,int userid)
     {
         super(window,ModalityType.APPLICATION_MODAL);
         this.p=p;
+        this.userid=userid;
         init();
     }
     private void init()
@@ -95,7 +103,7 @@ public class ProductDetailPanel extends JDialog{
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.fill =GridBagConstraints.NONE;
         lblbrand = new JLabel("Thương hiệu: "+productbus.getBrandFromId(p.getBrandId()).getBrandName());
-        lblbrand.setFont(Theme.infofont);
+        lblbrand.setFont(Theme.infofont1);
         lblbrand.setBorder(new EmptyBorder(0,0,0,0));
         gbc.gridx=0;
         gbc.gridy=0;
@@ -105,17 +113,17 @@ public class ProductDetailPanel extends JDialog{
         pnlinfo.add(lblbrand,gbc);
 
         lblmaterial = new JLabel("Chất liệu: "+productbus.getMaterialFromId(p.getMaterialId()).getMaterialName());
-        lblmaterial.setFont(Theme.infofont);
+        lblmaterial.setFont(Theme.infofont1);
         gbc.gridy=1;
         pnlinfo.add(lblmaterial,gbc);
 
         lbldescription = new JLabel("Mô tả: "+p.getDescription());
-        lbldescription.setFont(Theme.infofont);
+        lbldescription.setFont(Theme.infofont1);
         gbc.gridy=2;
         pnlinfo.add(lbldescription,gbc);
 
         JLabel lblcolor = new JLabel("Màu sắc:");
-        lblcolor.setFont(Theme.infofont);
+        lblcolor.setFont(Theme.infofont1);
         gbc.gridy=3;
         pnlinfo.add(lblcolor,gbc);
         
@@ -128,7 +136,7 @@ public class ProductDetailPanel extends JDialog{
         ButtonGroup colorgroup = new ButtonGroup();
         for(ProductColor i: productcolordao.getAllProductColorFromPId(p.getProductId()))
         {
-            ColorCheckBox cbb = new ColorCheckBox(i.getColorId());
+            ColorCheckBox cbb = new ColorCheckBox(i.getColorId(),20);
             colorcheckbox.add(cbb);
             colorgroup.add(cbb);
             pnlcolorbox.add(cbb);
@@ -136,7 +144,7 @@ public class ProductDetailPanel extends JDialog{
                 // SIZE CHECKBOX
         JLabel lblsize = new JLabel("Size: ");
         lblsize.setBorder(new EmptyBorder(0,0,0,0));
-        lblsize.setFont(Theme.infofont);
+        lblsize.setFont(Theme.infofont1);
         gbc.gridy=5;
         pnlinfo.add(lblsize,gbc);
 
@@ -147,16 +155,16 @@ public class ProductDetailPanel extends JDialog{
         pnlinfo.add(pnlsizebox,gbc);    
 
         ButtonGroup sizegroup = new ButtonGroup();
-        SizeCheckBox sizes = new SizeCheckBox("S");
+        SizeCheckBox sizes = new SizeCheckBox("S",15);
         sizecheckbox.add(sizes);
 
-        SizeCheckBox sizem = new SizeCheckBox("M");
+        SizeCheckBox sizem = new SizeCheckBox("M",15);
         sizecheckbox.add(sizem);
 
-        SizeCheckBox sizel = new SizeCheckBox("L");
+        SizeCheckBox sizel = new SizeCheckBox("L",15);
         sizecheckbox.add(sizel);
 
-        SizeCheckBox sizexl = new SizeCheckBox("XL");
+        SizeCheckBox sizexl = new SizeCheckBox("XL",15);
         sizecheckbox.add(sizexl);
         
         for(JCheckBox i : sizecheckbox)
@@ -167,7 +175,7 @@ public class ProductDetailPanel extends JDialog{
         
                 // PANEL QUANTITY BUY
         JLabel lblquan = new JLabel("Số lượng: ");
-        lblquan.setFont(Theme.infofont);
+        lblquan.setFont(Theme.infofont1);
         gbc.gridy=7;
         pnlinfo.add(lblquan,gbc);
 
@@ -180,7 +188,7 @@ public class ProductDetailPanel extends JDialog{
                 // QUANTITY STATUS
 
             lblpquantity = new JLabel();
-            lblpquantity.setFont(Theme.infofont);
+            lblpquantity.setFont(Theme.infofont1);
             lblpquantity.setVisible(false);
             gbc.gridy=9;
             pnlinfo.add(lblpquantity,gbc);
@@ -290,16 +298,45 @@ public class ProductDetailPanel extends JDialog{
             }
             
         });
+        ActionListener al = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == btnaddtocart)
+                {
+                    ProductVariant pv = getProductVariantFromGUI();
+                    int buyquan = pnlquan.getQuan();
+                    Cart cart = cartbus.getCartFromProductVariantUserId(pv, userid);
+                    if(cart!=null)
+                    {
+                        if(cart.getQuantity()+buyquan<pv.getQuantity())
+                        {
+                            if(cartbus.updateCartQuantity(userid, pv, cart.getQuantity()+buyquan))
+                                JOptionPane.showMessageDialog(ProductDetailPanel.this, "Sản phẩm đã có sẵn trong giỏ hàng, đã cập nhật số lượng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    else 
+                    {
+                        if(pv.getQuantity()>buyquan)
+                        {
+                            if(cartbus.addProductToCart(pv, userid, buyquan)){
+                                JOptionPane.showMessageDialog(ProductDetailPanel.this, "Thêm vào giỏ hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        }
+                    }
+                    
+                }
+            }
+            
+        };
+        btnaddtocart.addActionListener(al);
     }
     public boolean isBuyable()
     {
         int buyquan = pnlquan.getQuan();
-        ProductColor pc = null;
-        ProductVariant pv = null;
-        pc = productcolordao.getProductColorFromPIdAndColorId(p.getProductId(),getColorIdFromCheckBox());
-        if(pc!=null)
+        ProductVariant pv = getProductVariantFromGUI();
+        if(pv!=null)
         {
-            pv=productvariantbus.getProductVariantFromPCIdAndSize(pc.getProductColorId(), getSizeFromCheckBox());
             if(productvariantbus.checkIsBuyable(pv,buyquan))
             {
                 return true;
@@ -319,6 +356,16 @@ public class ProductDetailPanel extends JDialog{
             btnaddtocart.setEnabled(false);
             btnorder.setEnabled(false);
         }
+    }
+    public ProductVariant getProductVariantFromGUI()
+    {
+        ProductColor pc = productcolordao.getProductColorFromPIdAndColorId(p.getProductId(), getColorIdFromCheckBox());
+        ProductVariant pv =null;
+        if(pc!=null)
+        {
+            pv = productvariantbus.getProductVariantFromPCIdAndSize(pc.getProductColorId(), getSizeFromCheckBox());
+        }
+        return pv;
     }
     
 }

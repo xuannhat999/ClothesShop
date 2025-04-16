@@ -81,12 +81,13 @@ public class MainPanel extends JPanel{
         gbc.weighty=1;
         add(pnlcon5,gbc);
         
+        // COMPONENT
         JPanel pnlsearch = new JPanel();
         pnlsearch.setLayout(null);
         pnlsearch.setPreferredSize(new Dimension(300,50));
         pnlsearch.setOpaque(false);
         gbc.gridx=0;
-        gbc.gridy=0;
+        gbc.gridy=1;
         gbc.weightx=1;
         gbc.weighty=0;
         gbc.gridwidth=4;
@@ -115,7 +116,7 @@ public class MainPanel extends JPanel{
         btnadd.setButtonSize(70, 40);
         btnadd.setForeground(Color.white);
         gbc.gridx=0;
-        gbc.gridy=1;
+        gbc.gridy=2;
         gbc.weightx=1;
         gbc.weighty=0;
         gbc.gridwidth=1;

@@ -16,4 +16,8 @@ public class UserBUS {
         }
         return null;
     }
+    public User getUserFromId(int id)
+    {
+        return userDAO.getUserFromId(id);
+    }
 }

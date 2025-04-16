@@ -98,4 +98,26 @@ public class ProductColorDAO {
         }
         return pc;
     }
+    public ProductColor getProductColorFromId(int pcid)
+    {
+        String sql = "select * from product_color where product_color_id =?";
+        ProductColor pc =null;
+        try{
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,pcid);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next())
+            {
+                pc = new ProductColor(rs.getInt("product_color_id"),
+                                        rs.getInt("product_id"),
+                                        rs.getInt("color_id"),
+                                        rs.getString("url"));
+            }
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return pc;
+    }
 }

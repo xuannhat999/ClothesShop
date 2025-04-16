@@ -7,18 +7,19 @@ import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.border.EmptyBorder;
 
 public class SizeCheckBox extends JCheckBox{
     private String text;
-    public SizeCheckBox(String text){
+    private int size;
+    public SizeCheckBox(String text,int size){
+        this.size=size;
         this.text=text;
         init();
     }
     private void init()
     {
         setText(text);
-        setFont(Theme.infofont);
+        setFont(Theme.infofont1);
         setFocusPainted(false);
         setContentAreaFilled(false);
         setUnselectedIcon();
@@ -26,28 +27,28 @@ public class SizeCheckBox extends JCheckBox{
     }
     private void setUnselectedIcon()
     {
-        BufferedImage image = new BufferedImage(15, 15, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
         g.setColor(Color.white);
-        g.fillRect(0,0,15,15);
+        g.fillRect(0,0,size,size);
 
         g.setColor(Color.black);
-        g.drawRect(0, 0, 14,14);
+        g.drawRect(0, 0, size-1,size-1);
 
         g.dispose();
         setIcon(new ImageIcon(image));
     }
     private void setSelectedIcon()
     {
-        BufferedImage image = new BufferedImage(15, 15, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
         g.setColor(Color.white);
-        g.fillRect(0,0,15,15);
+        g.fillRect(0,0,size,size);
 
         g.setColor(Color.cyan);
-        g.drawRect(0, 0, 13,13);
+        g.drawRect(0, 0, size-1,size-1);
 
         g.dispose();
         setIcon(new ImageIcon(image));

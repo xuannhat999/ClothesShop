@@ -1,6 +1,7 @@
 package BUS;
 
 import DAO.ProductVariantDAO;
+import DTO.Product;
 import DTO.ProductVariant;
 
 public class ProductVariantBUS {
@@ -22,6 +23,18 @@ public class ProductVariantBUS {
             }
         }
         return false;
+    }
+    public boolean updateProductVariant(ProductVariant pv)
+    {
+        return productvariantdao.updateProductVariant(pv);
+    }
+    public Product getProductFromProductVariantId(int pvid)
+    {
+        return productvariantdao.getProductFromProductVariantId(pvid);
+    }
+    public ProductVariant getProductVariantFromId(int pvid)
+    {
+        return productvariantdao.getProductVariantFromId(pvid);
     }
 
 

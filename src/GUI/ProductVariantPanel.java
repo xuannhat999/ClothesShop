@@ -1,61 +1,191 @@
 package GUI;
 
+import BUS.CartBUS;
 import BUS.ProductVariantBUS;
+import DAO.ColorDAO;
+import DAO.ProductColorDAO;
 import DTO.Product;
-import java.awt.BorderLayout;
+import DTO.ProductVariant;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class ProductVariantPanel extends JPanel{
-    private Product p;
-    private JLabel lblpname,lblimage,lblprice;
-    private ProductVariantBUS productvariantbus = new ProductVariantBUS();
-    public ProductVariantPanel(Product p)
+    private ProductVariant pv;
+    private int buyquan;
+    private JPanel pnlinfo,pnlbtn,pnlimage;
+    private JLabel lblpname,lblpcolor,lblpsize,lblprice;
+    private ProductVariantBUS productVariantbus= new ProductVariantBUS();
+    private ColorDAO colordao = new ColorDAO();
+    private ProductColorDAO productcolordao = new ProductColorDAO();
+    private RoundedButton btnremove;
+    private QuantityPanel pnlquan;
+    private int userid;
+    private CartBUS cartbus = new CartBUS();
+    public ProductVariantPanel(ProductVariant pv,int buyquan,int userid)
     {
-        this.p=p;
+        this.pv=pv;
+        this.buyquan=buyquan;
+        this.userid=userid;
         init();
     }
+
     private void init()
     {
-        
-        setPreferredSize(new Dimension(200,230));
-        setLayout(new BorderLayout());
-        setBackground(Color.white);
+        setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(1100,100));
+        setBorder(BorderFactory.createLineBorder(Theme.brown,1));
+        setBackground(Theme.light1);
         setOpaque(true);
 
-        JPanel pnlinfo  = new JPanel(new GridLayout(0,1,0,0));
-        add(pnlinfo,BorderLayout.SOUTH);
 
-        lblpname = new JLabel(p.getProductName());
-        lblpname.setFont(new Font("Arial",Font.CENTER_BASELINE,14));
-        lblpname.setBorder(new EmptyBorder(5,10,5,10));
-        pnlinfo.add(lblpname);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill= GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0,0,0,0);
 
-        lblprice = new JLabel(p.getPrice().toString()+ "đ");
-        lblprice.setFont(new Font("Arial",Font.CENTER_BASELINE,12));
-        lblprice.setBorder(new EmptyBorder(0,10,5,10));
-        pnlinfo.add(lblprice);
+        pnlimage = new JPanel();
+        pnlimage.setPreferredSize(new Dimension(100,100));
+        pnlimage.setMinimumSize(pnlimage.getPreferredSize());
+        pnlimage.setOpaque(false);
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.weightx=0;
+        gbc.weighty=0;
+    
+        add(pnlimage,gbc);
 
-        /*ImageIcon im = new ImageIcon(productvariantbus.getProductImageFromProductId(p.getProductId()));
-        im.setImage(im.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-        lblimage = new JLabel(im);
-        lblimage.setBorder(new EmptyBorder(0,0,0,0));
-        add(lblimage,BorderLayout.CENTER);*/
-        addEvent();
-    }   
-    public void addEvent()
+        pnlinfo = new JPanel(new GridBagLayout());
+        pnlinfo.setPreferredSize(new Dimension(900,100));
+        pnlinfo.setOpaque(false);
+        gbc.gridx=1;
+        add(pnlinfo,gbc);
+
+        pnlbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT,20,20));
+        pnlbtn.setOpaque(false);
+        gbc.weightx=1;
+        gbc.gridx=2;
+        add(pnlbtn,gbc);
+
+        // COMPONENT
+            // PANEL IMAGE 
+
+            // PANEL INFO
+            lblpname = new JLabel(getProductFromProductVariant().getProductName());
+            lblpname.setFont(Theme.infofont1);
+            gbc.gridx=0;
+            gbc.gridy=0;
+            gbc.weightx=1;
+            gbc.weighty=1;
+            gbc.gridwidth=2;
+            pnlinfo.add(lblpname,gbc);
+
+            lblpcolor = new JLabel("Màu: "+colordao.getColorFromId(productcolordao.getProductColorFromId(pv.getProductColorId()).getColorId()).getColorName());
+            lblpcolor.setFont(Theme.infofont2);
+            lblpcolor.setForeground(Color.darkGray);
+            gbc.gridy=1;
+            gbc.gridx=0;
+            gbc.gridwidth=1;
+            pnlinfo.add(lblpcolor,gbc);
+
+            lblpsize = new JLabel("Size: "+pv.getSize());
+            lblpsize.setFont(Theme.infofont2);
+            lblpsize.setForeground(Color.darkGray);
+            gbc.gridx=1;
+            pnlinfo.add(lblpsize,gbc);
+
+            lblprice = new JLabel(getProductFromProductVariant().getPrice().toString()+" đ");
+            lblprice.setFont(Theme.infofont1);
+            gbc.gridx=0;
+            gbc.gridy=2;
+            gbc.gridwidth=2;
+            pnlinfo.add(lblprice,gbc);
+
+        // PANEL BUTTON 
+            pnlquan = new QuantityPanel(30);
+            pnlquan.setQuantity(buyquan);
+            pnlbtn.add(pnlquan);
+
+            btnremove = new RoundedButton("", 20);
+            btnremove.setButtonSize(30,30);
+            btnremove.setBackground(Color.red);
+            pnlbtn.add(btnremove);
+
+            addEvent();
+    }
+    private void addEvent()
     {
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
+        ActionListener al = new ActionListener() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                new ProductDetailPanel(SwingUtilities.getWindowAncestor(ProductVariantPanel.this), p);
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == btnremove)
+                {
+                    Container parent = getParent();
+                    parent.remove(ProductVariantPanel.this);
+                    parent.revalidate();
+                    parent.repaint();
+                    if(cartbus.removeProductFromCart(userid, pv))
+                    {
+                        JOptionPane.showMessageDialog(parent,"Đã xóa sản phẩm khỏi giỏ hàng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
             }
+            
+        };
+        btnremove.addActionListener(al);
+
+        pnlquan.getQuanTextField().getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(()->{
+                    updateCartQuantity();
+                });
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(()->{
+                    updateCartQuantity();
+                });
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+            
         });
     }
+    public Product getProductFromProductVariant()
+    {
+        return productVariantbus.getProductFromProductVariantId(pv.getProductVariantId());
+    }
+    public int getQuantity()
+    {
+        return pnlquan.getQuan();
+    }
+    public RoundedButton getRemoveButton()
+    {
+        return btnremove;
+    }
+    public void updateCartQuantity()
+    {
+        cartbus.updateCartQuantity(userid, pv, getQuantity());
+    }
+    public QuantityPanel getQuantityPanel()
+    {
+        return pnlquan;
+    }
+
 }

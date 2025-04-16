@@ -16,8 +16,6 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Filter;
@@ -28,14 +26,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.PopupFactory;
-import javax.swing.SwingContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-public class ProductPanel extends MainPanel{
+public class ProductManagerGUI extends MainPanel{
     private JTextField txfproductid,txfproductname,txfdescription,txfprice;
     private JLabel lblproductid,lblproductname,lblbrand,lbldescription,lblcategory,lblmaterial,lblprice,lblgender;
     private JComboBox <Category> cbbcategory;
@@ -47,7 +43,7 @@ public class ProductPanel extends MainPanel{
     private ProductFilterPanel pfp;
     private FilterDialog filter;
     private ProductBUS productbus = new ProductBUS();
-    public ProductPanel(int userid) {
+    public ProductManagerGUI(int userid) {
         super(userid);
         init();
     }
@@ -167,7 +163,7 @@ public class ProductPanel extends MainPanel{
         btncancel.setVisible(false);
 
         pfp = new ProductFilterPanel();
-        filter = new FilterDialog(SwingUtilities.getWindowAncestor(ProductPanel.this), pfp);
+        filter = new FilterDialog(SwingUtilities.getWindowAncestor(ProductManagerGUI.this), pfp);
         filter.setVisible(false);
 
         addEvent();
