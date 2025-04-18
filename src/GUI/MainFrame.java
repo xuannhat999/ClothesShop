@@ -34,6 +34,7 @@ public class MainFrame extends JFrame {
         main = new JPanel(cardlayout);
         main.add(new ShoppingGUI(userid),"1");
         main.add(new ProductManagerGUI(userid),"2");
+        main.add(new InvoiceManagerGUI(userid),"4");
         add(main,BorderLayout.CENTER);
         setVisible(true);
     }
