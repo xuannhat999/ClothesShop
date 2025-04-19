@@ -25,6 +25,7 @@ public List<Feature> getAllFeature()
                     rs.getString("feature_name")
                 ));
             }
+            
         }catch (SQLException e)
         {
             e.printStackTrace();
@@ -48,6 +49,7 @@ public Feature getFeatureById(int id)
                 rs.getString("feature_name")
             );
         }
+        
     }catch (SQLException e)
     {
         e.printStackTrace();
@@ -73,6 +75,7 @@ public List<Feature> getFeatureFromRoleId(int roleid)
                 rs.getString("feature_name")
             ));
         }
+        
     } catch (SQLException e) {
         e.printStackTrace();
     }

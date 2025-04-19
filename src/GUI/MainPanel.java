@@ -100,7 +100,7 @@ public class MainPanel extends JPanel{
         btnfind.setPreferredSize(new Dimension(50,50));
         btnfind.setBackground(Theme.brown);
         pnlsearch.add(btnfind);
-        btnfind.setIcon(new ImageIcon("D:\\VSCode\\ClothesShop\\icon\\icons8-search-30.png"));
+        btnfind.setIcon(new ImageIcon("ClothesShop\\icon\\icons8-search-30.png"));
 
         btnfilter = new RoundedButton("",25);
         btnfilter.setPreferredSize(new Dimension(50,50));
@@ -108,7 +108,7 @@ public class MainPanel extends JPanel{
         btnfilter.setBorderWidth(1);
         btnfilter.setBorderColor(Theme.brown);
         pnlsearch.add(btnfilter);
-        btnfilter.setIcon(new ImageIcon("D:\\VSCode\\ClothesShop\\icon\\icons8-filter-30.png"));
+        btnfilter.setIcon(new ImageIcon("ClothesShop\\icon\\icons8-filter-30.png"));
 
         btnadd = new RoundedButton("Thêm", 20);
         btnadd.setBackground(Theme.brown);

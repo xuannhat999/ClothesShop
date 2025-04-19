@@ -31,7 +31,7 @@ public class LeftMenu extends JPanel{
     }
     private void loadFeatureButton()
     {
-        JLabel lblblank = new JLabel(new ImageIcon("D:\\VSCode\\ClothesShop\\icon\\icons8-menu-50.png"));
+        JLabel lblblank = new JLabel(new ImageIcon("ClothesShop\\icon\\icons8-menu-50.png"));
         lblblank.setPreferredSize(new Dimension(300,75));
         lblblank.setMaximumSize(new Dimension(300,75));
         lblblank.setHorizontalAlignment(JLabel.LEFT);

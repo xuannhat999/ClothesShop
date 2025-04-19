@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "ClothesShop_e6ab7e38"
+        },
         {
             "type": "java",
             "name": "Current File",
@@ -18,6 +24,5 @@
             "mainClass": "Main",
             "projectName": "ClothesShop_15d2dd32"
         }
-      
     ]
 }
