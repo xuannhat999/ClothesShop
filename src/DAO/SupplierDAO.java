@@ -11,10 +11,10 @@ import java.util.List;
 
 public class SupplierDAO {
     
-    public List<Supplier> getAllBrand()
+    public List<Supplier> getAllSupplier()
     {
-        String sql ="get * from supplier";
-        List<Supplier> bl = new ArrayList<Supplier>();
+        String sql ="select* from supplier";
+        List<Supplier> bl = new ArrayList<>();
         try {
             Connection conn = DatabaseConnection.getConnection();
             Statement stm = conn.createStatement();

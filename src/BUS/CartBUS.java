@@ -3,11 +3,9 @@ package BUS;
 import DAO.CartDAO;
 import DTO.Cart;
 import DTO.ProductVariant;
-
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.naming.BinaryRefAddr;
 
 public class CartBUS {
     private CartDAO cartdao = new CartDAO();

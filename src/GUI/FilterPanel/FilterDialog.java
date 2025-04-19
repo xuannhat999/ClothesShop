@@ -6,9 +6,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
@@ -23,10 +26,12 @@ public class FilterDialog extends JDialog{
     {
         setSize(500,300);
         setLayout(new BorderLayout());
-        setLocationRelativeTo(null);
         getContentPane().setBackground(Theme.light1);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setUndecorated(true);
+        getRootPane().setBorder(BorderFactory.createLineBorder(Theme.brown,1));
         add(pnl,BorderLayout.CENTER);
+        setLocationRelativeTo(null);
 
         JPanel pnlbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         pnlbtn.setPreferredSize(new Dimension(500,40));

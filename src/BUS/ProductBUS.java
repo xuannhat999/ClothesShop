@@ -75,7 +75,6 @@ public class ProductBUS {
     {
         if(productdao.getProductFromId(p.getProductId()) != null)
         {
-            System.out.println("Product already exists");
             return false;
         }
         if(p.getProductName().equals("") || p.getProductName() == null)

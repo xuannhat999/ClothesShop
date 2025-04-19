@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.Product;
+import DTO.ProductColor;
 import DTO.ProductVariant;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +47,7 @@ public class ProductVariantDAO {
             stm.setInt(1,pcid);
             stm.setString(2,size);
             ResultSet rs = stm.executeQuery();
-            if(rs.next())
+            while(rs.next())
             {
                 pv = new ProductVariant(
                     rs.getInt("product_variant_id"),
@@ -69,7 +70,7 @@ public class ProductVariantDAO {
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setInt(1,pcid);
             ResultSet rs = stm.executeQuery();
-            if(rs.next())
+            while(rs.next())
             {
                 pvl.add(new ProductVariant(
                     rs.getInt("product_variant_id"),
@@ -155,5 +156,24 @@ public class ProductVariantDAO {
         }
         return pv;
     }
+    public boolean addProductVariant(ProductColor pc)
+    {
+        String sql ="insert into product_variant (product_color_id,size,quantity) values (?,'S',0),(?,'M',0),(?,'L',0),(?,'XL',0)";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            int pcid = pc.getProductColorId();
+            stm.setInt(1,pcid);
+            stm.setInt(2,pcid);
+            stm.setInt(3,pcid);
+            stm.setInt(4,pcid);
+            return stm.executeUpdate()>0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    
 
 }

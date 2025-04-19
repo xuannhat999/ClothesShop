@@ -1,12 +1,9 @@
 package GUI;
 
-import BUS.BankBUS;
 import BUS.CartBUS;
 import BUS.ProductVariantBUS;
 import BUS.UserBUS;
-import DAO.CartDAO;
 import DAO.PaymentMethodDAO;
-import DTO.Bank;
 import DTO.Cart;
 import DTO.PaymentMethod;
 import DTO.User;
@@ -28,7 +25,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -41,13 +37,10 @@ public class PayPanel extends JDialog{
     private JScrollPane sp;
     private CartBUS cartbus = new CartBUS();
     private ProductVariantBUS productvariantbus = new ProductVariantBUS();
-    private JLabel lblname,lbldob,lblemail,lblphone,lbladdress,lblbank,lblbanknum,lbltotal;
+    private JLabel lblname,lbldob,lblemail,lblphone,lbladdress,lblbank,lblbanknum,lblbankaccname,lbltotal;
     private JComboBox<PaymentMethod> cbbpaymethod;
-    private JComboBox<Bank> cbbbank;
-    private JTextField txfbanknum;
     private UserBUS userbus = new UserBUS();
     private PaymentMethodDAO pmdao = new PaymentMethodDAO();
-    private BankBUS bankbus = new BankBUS();
     private List<Cart> cartlist = new ArrayList<>();
     private BigDecimal total;
     public PayPanel(Window window,int userid,List<Cart> cl)
@@ -92,7 +85,7 @@ public class PayPanel extends JDialog{
         add(pnlpay,gbc);
 
         pnlproduct = new JPanel(new GridBagLayout());
-        loadProduct(cartbus.getAllCartFromUserId(userid));
+        loadProduct();
         sp = new JScrollPane(pnlproduct);
         sp.setPreferredSize(new Dimension(1100,300));
         gbc.gridy=2;
@@ -169,25 +162,17 @@ public class PayPanel extends JDialog{
             gbc.weightx=0;
             pnlpay.add(cbbpaymethod,gbc);
 
-            lblbank = new JLabel("Ngân hàng");
+            lblbank = new JLabel("Ngân hàng:  BANK 1");
             gbc.gridy=2;
             pnlpay.add(lblbank,gbc);
 
-            cbbbank = new JComboBox<>();
-            for(Bank i: bankbus.getAllBank())
-            {
-                cbbbank.addItem(i);
-            }
+            lblbanknum = new JLabel("Số tài khoản:  01234567890");
             gbc.gridy=3;
-            pnlpay.add(cbbbank,gbc);
-
-            lblbanknum = new JLabel("Số tài khoản");
-            gbc.gridy=4;
             pnlpay.add(lblbanknum,gbc);
 
-            txfbanknum = new JTextField();
-            gbc.gridy=5;
-            pnlpay.add(txfbanknum,gbc);
+            lblbankaccname = new JLabel("Tên người nhận:  NGUYEN VAN A");
+            gbc.gridy=4;
+            pnlpay.add(lblbankaccname,gbc);
 
             IsBanking(false);
         // PANEL BOTTOM
@@ -209,11 +194,10 @@ public class PayPanel extends JDialog{
     public void IsBanking(boolean a)
     {
         lblbank.setVisible(a);
-        cbbbank.setVisible(a);
         lblbanknum.setVisible(a);
-        txfbanknum.setVisible(a);
+        lblbankaccname.setVisible(a);
     }
-    public void loadProduct(List<Cart> cl)
+    public void loadProduct()
     {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -222,7 +206,7 @@ public class PayPanel extends JDialog{
         gbc.gridx=0;
         gbc.weightx=1;
         gbc.weighty=0;
-        for(Cart i :cl)
+        for(Cart i :cartlist)
         {
             ProductVariantPanel pvp =new ProductVariantPanel(productvariantbus.getProductVariantFromId(i.getProductVariantId()),i.getQuantity() ,userid);
             pvp.getRemoveButton().setVisible(false);
@@ -236,10 +220,6 @@ public class PayPanel extends JDialog{
     {
         return (PaymentMethod) cbbpaymethod.getSelectedItem();
     }
-    public Bank getBank()
-    {
-        return (Bank)cbbbank.getSelectedItem();
-    }
     private void addEvent()
     {
         ActionListener al = new ActionListener() {
@@ -249,12 +229,23 @@ public class PayPanel extends JDialog{
                 if(e.getSource()==cbbpaymethod)
                 {
                     IsBanking(getpPaymentMethod().getPaymentMethodId()==2);
-                
+                }
+                else if (e.getSource()==btnorder)
+                {
+                    if(cartlist.size()>1)
+                    {
+                        for(Cart i:cartlist)
+                        {
+                            cartbus.removeProductFromCart(userid, productvariantbus.getProductVariantFromId(i.getProductVariantId()));
+                        }
+                    }
+                    PayPanel.this.dispose();
                 }
             }
             
         };
         cbbpaymethod.addActionListener(al);
+        btnorder.addActionListener(al);
     }
 
 

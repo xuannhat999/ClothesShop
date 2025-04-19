@@ -1,13 +1,22 @@
 package GUI;
 
 import BUS.ProductBUS;
+import BUS.ProductVariantBUS;
+import DAO.ColorDAO;
+import DAO.ProductColorDAO;
 import DTO.Brand;
 import DTO.Category;
 import DTO.Gender;
 import DTO.Material;
+import DTO.PColor;
 import DTO.Product;
+import DTO.ProductColor;
+import GUI.FilterPanel.AddURLToProductColorPanel;
+import GUI.FilterPanel.BigDialog;
 import GUI.FilterPanel.FilterDialog;
 import GUI.FilterPanel.ProductFilterPanel;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import utils.InputParser;
 
 import java.awt.Font;
@@ -17,15 +26,18 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Filter;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
@@ -33,7 +45,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class ProductManagerGUI extends MainPanel{
     private JTextField txfproductid,txfproductname,txfdescription,txfprice;
-    private JLabel lblproductid,lblproductname,lblbrand,lbldescription,lblcategory,lblmaterial,lblprice,lblgender;
+    private JLabel lblproductid,lblproductname,lblbrand,lbldescription,lblcategory,lblmaterial,lblprice,lblgender,lblcolor;
     private JComboBox <Category> cbbcategory;
     private JComboBox <Material> cbbmaterial;
     private JComboBox <Brand> cbbbrand;
@@ -41,24 +53,29 @@ public class ProductManagerGUI extends MainPanel{
     private JTable tblproduct;
     private DefaultTableModel mdlproduct;
     private ProductFilterPanel pfp;
-    private FilterDialog filter;
+    private AddURLToProductColorPanel addurlpnl;
+    private FilterDialog filter,addurl;
+    private JPanel pnlcolor;
     private ProductBUS productbus = new ProductBUS();
-    public ProductManagerGUI(int userid) {
-        super(userid);
+    private List<ColorCheckBox> colorlist = new ArrayList<>();
+    private ProductVariantBUS productvariantbus = new ProductVariantBUS();
+    private ColorDAO colordao = new ColorDAO();
+    private RoundedButton btnaddurl,btnimport;
+    private int employeeid;
+    public ProductManagerGUI(int employeeid) {
+        super();
+        this.employeeid = employeeid;
         init();
+    
     }
     private void init()
     {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets  = new Insets(5, 5, 5, 5);
-        String columnName[] ={"Mã sản phẩm","Tên sản phẩm","Mô tả","Thương hiệu","Chất liệu","Giới tính","Danh mục","Giá"};
+        String columnName[] ={"ID","Tên sản phẩm","Mô tả","Thương hiệu","Chất liệu","Giới tính","Danh mục","Giá"};
 
-        // PANEL 1
-
-        // PANEL IAMGE
-
-        // PANEL 2 
+        // PANEL 1 
         JLabel lblproductinfo = new JLabel("Thông tin sản phẩm");
         lblproductinfo.setFont(new Font("Roboto",Font.BOLD,20));
         lblproductinfo.setBorder(new EmptyBorder(0,0,10,0));
@@ -106,6 +123,9 @@ public class ProductManagerGUI extends MainPanel{
         gbc.gridy = 8;
         pnlcon1.add(lblprice,gbc);
 
+        lblcolor = new JLabel("Màu");
+        gbc.gridy=9;
+        pnlcon1.add(lblcolor,gbc);
 
         txfproductid = new JTextField();
         gbc.gridx=1;
@@ -141,9 +161,30 @@ public class ProductManagerGUI extends MainPanel{
         gbc.gridy=8;
         pnlcon1.add(txfprice,gbc);
 
+        pnlcolor = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlcolor.setOpaque(false);
+        gbc.gridy=9;
+        pnlcon1.add(pnlcolor,gbc);
+
+        btnaddurl = new RoundedButton("URL hình ảnh",15);
+        btnaddurl.setBackground(Theme.light3);
+        btnaddurl.setButtonSize(100,30);
+        gbc.gridx=2;
+        gbc.gridwidth=1;
+        gbc.weightx=0;
+        pnlcon1.add(btnaddurl,gbc);
+
         loadJComboBox();
         showProductInfo(false);
-        
+        // PANEL 2
+        btnimport = new RoundedButton("Nhập hàng", 20);
+        btnimport.setButtonSize(100,40);
+        btnimport.setBackground(Theme.light4);
+        gbc.gridx=0;
+        gbc.gridy=3;
+        gbc.weightx=1;
+        gbc.weighty=0;
+        pnlcon2.add(btnimport,gbc);
         // PANEL 4
 
         mdlproduct = new DefaultTableModel(columnName,0);
@@ -157,15 +198,32 @@ public class ProductManagerGUI extends MainPanel{
         gbc.weighty = 1;
         pnlcon4.add(sp,gbc);
 
+        tblproduct.setRowHeight(30);
+        tblproduct.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tblproduct.getColumnModel().getColumn(0).setPreferredWidth(30);
+
+        tblproduct.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        sp.getViewport().setBackground(Theme.light1);
+        tblproduct.getTableHeader().setBackground(Theme.light2);
+        tblproduct.getTableHeader().setPreferredSize(new Dimension(0,40));
+        tblproduct.getTableHeader().setFont(new Font("Roboto",Font.BOLD,14));
+        tblproduct.setShowVerticalLines(false);
+        tblproduct.setGridColor(Theme.brown);
+
+
         txfproductid.setEditable(false);
         setEditable(false);
         btnsave.setVisible(false);
         btncancel.setVisible(false);
 
         pfp = new ProductFilterPanel();
-        filter = new FilterDialog(SwingUtilities.getWindowAncestor(ProductManagerGUI.this), pfp);
+        filter = new FilterDialog(SwingUtilities.getWindowAncestor(this), pfp);
         filter.setVisible(false);
 
+        addurlpnl= new AddURLToProductColorPanel();
+        addurl = new FilterDialog(SwingUtilities.getWindowAncestor(this), addurlpnl);
+        addurl.setVisible(false);
         addEvent();
 
     }
@@ -179,6 +237,56 @@ public class ProductManagerGUI extends MainPanel{
         cbbcategory.setVisible(show);
         cbbmaterial.setVisible(show);
         cbbgender.setVisible(show);
+        pnlcolor.setVisible(show);
+    }
+    public void loadColor(int productid,boolean isAddOrUpdate)
+    {
+        colorlist.clear();
+        pnlcolor.removeAll();
+        pnlcolor.revalidate();
+        pnlcolor.repaint();
+        if(!isAddOrUpdate)
+        {
+            for(ProductColor i: productvariantbus.getProductColorFromPID(productid))
+            {
+                ColorCheckBox color = new ColorCheckBox(i.getColorId(), 20);
+                pnlcolor.add(color);
+            }
+        }
+        else
+        {
+            for(PColor i:colordao.getAllColor())
+            {
+                ColorCheckBox color = new ColorCheckBox(i.getColorId(), 20);
+                colorlist.add(color);
+                pnlcolor.add(color);
+            }
+            if(productbus.getProductFromId(productid)!=null)
+            {
+                for(ColorCheckBox i:colorlist)
+                {
+                    for(ProductColor j:productvariantbus.getProductColorFromPID(productid))
+                    {
+                        if(i.getColorId()==j.getColorId())
+                        {
+                            i.setSelected(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public List<ColorCheckBox> getSelectedColor()
+    {
+        List<ColorCheckBox> selectedcolor= new ArrayList<>();
+        for(ColorCheckBox i: colorlist)
+        {
+            if(i.isSelected())
+            {
+                selectedcolor.add(i);
+            }
+        }
+        return selectedcolor;
     }
     private void loadDataTable(List<Product>pdl)
     {
@@ -207,6 +315,7 @@ public class ProductManagerGUI extends MainPanel{
         cbbcategory.setEnabled(e);
         cbbmaterial.setEnabled(e);
         cbbgender.setEnabled(e);
+        btnaddurl.setVisible(e);
     }
     public void loadJComboBox()
     {
@@ -238,6 +347,7 @@ public class ProductManagerGUI extends MainPanel{
         cbbmaterial.setSelectedItem(productbus.getMaterialFromId(product.getMaterialId()));
         cbbgender.setSelectedItem(productbus.getGenderFromId(product.getGender()));
         txfprice.setText(product.getPrice().toString());
+        loadColor(productid,false);
     }
     private void addEvent()
     {
@@ -259,6 +369,7 @@ public class ProductManagerGUI extends MainPanel{
                     cbbcategory.setSelectedIndex(-1);
                     cbbmaterial.setSelectedIndex(-1);
                     cbbgender.setSelectedIndex(-1);
+                    loadColor(Integer.parseInt(txfproductid.getText()),true);
                     setEditable(true);
                 }
                 else if(e.getSource() == btnupdate)
@@ -266,6 +377,7 @@ public class ProductManagerGUI extends MainPanel{
                     btncancel.setVisible(true);
                     btnsave.setVisible(true);
                     setEditable(true);
+                    loadColor(Integer.parseInt(txfproductid.getText()),true);
                     tblproduct.setEnabled(false);
                 }
                 else if(e.getSource()==btnremove)
@@ -319,8 +431,54 @@ public class ProductManagerGUI extends MainPanel{
                                                     brand.getBrandId(),
                                                     gender.getGenderId()
                             );
-                            productbus.addProduct(p);
-                            productbus.updateProduct(p);
+                            List<ProductColor> pcl = addurlpnl.getProductColors();
+
+                            if(productbus.getProductFromId(pid)==null)
+                            {
+                                if(productbus.addProduct(p))
+                                {
+                                    for(ProductColor i: pcl)
+                                    {
+                                        if(productvariantbus.addProductColor(i))
+                                        {
+                                            ProductColor npc = productvariantbus.getProductColorFromPIdColorId(i.getProductId(),i.getColorId());
+                                            productvariantbus.addProductVariantFromPC(npc);
+                                        }
+                                    }
+                                    JOptionPane.showMessageDialog(ProductManagerGUI.this,"Thêm sản phẩm thành công");
+                                }
+
+                            }
+                            else
+                            {
+                                if(productbus.updateProduct(p))
+                                {
+                                    for(ProductColor i:pcl)
+                                    {
+                                        ProductColor j = productvariantbus.getProductColorFromPIdColorId(i.getProductId(),i.getColorId());
+                                        if(j!=null)
+                                        {
+                                            i.setProductColorId(j.getProductColorId());
+                                            if(productvariantbus.updateProductColor(i))
+                                            {
+                                                System.out.print("Updated PC");
+                                            }
+
+                                        }
+                                        else 
+                                        {
+                                            if(productvariantbus.addProductColor(i))
+                                            {
+                                                ProductColor npc = productvariantbus.getProductColorFromPIdColorId(i.getProductId(),i.getColorId());
+                                                productvariantbus.addProductVariantFromPC(npc);
+                                            }
+                                        }
+                                    }
+                                    JOptionPane.showMessageDialog(ProductManagerGUI.this,"Cập nhật sản phẩm thành công");
+                                }
+                                
+                            }
+
                             loadDataTable(productbus.getAllProduct());
                             setEditable(false);
                             showProductInfo(false);
@@ -337,8 +495,31 @@ public class ProductManagerGUI extends MainPanel{
                 {
                     filter.setVisible(true);
                 }
-            }
-            
+                else if(e.getSource()==btndetail)
+                {
+                    new ProductDetailPanel(Integer.parseInt(tblproduct.getValueAt(tblproduct.getSelectedRow(), 0).toString()));
+                }
+                else if(e.getSource() == btnaddurl)
+                {
+                    
+                    addurlpnl.loadData(getSelectedColor(),Integer.parseInt(txfproductid.getText()),txfproductname.getText());
+                    addurl.setVisible(true);
+                }
+                else if(e.getSource() == btnimport)
+                {
+                    List<Product> pl = new ArrayList<>();
+                    for(int i=0;i<tblproduct.getRowCount();i++)
+                    {
+                        if(tblproduct.getSelectedRow()==i)
+                        {
+                            pl.add(productbus.getProductFromId(Integer.parseInt(tblproduct.getValueAt(i, 0).toString())));
+                        }
+                    }
+                    ImportProductPanel importpanel = new ImportProductPanel(employeeid);
+                    new BigDialog(importpanel);
+                }
+                
+            }      
         };
         btnadd.addActionListener(al);
         btnremove.addActionListener(al);
@@ -347,6 +528,9 @@ public class ProductManagerGUI extends MainPanel{
         btncancel.addActionListener(al);
         btnfind.addActionListener(al);
         btnfilter.addActionListener(al);
+        btndetail.addActionListener(al);
+        btnaddurl.addActionListener(al);
+        btnimport.addActionListener(al);
 
         tblproduct.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override

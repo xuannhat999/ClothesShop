@@ -2,6 +2,7 @@ package GUI;
 
 import BUS.FeatureBUS;
 import DTO.Feature;
+import GUI.Frame.MainFrame;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;

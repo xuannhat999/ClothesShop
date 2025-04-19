@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class ProductFilterPanel extends JPanel{
     private JComboBox<Category> cbbcat;
@@ -22,7 +23,9 @@ public class ProductFilterPanel extends JPanel{
     }
     private void init()
     {
+        setBorder(new EmptyBorder(30,20,20,20));
         setLayout(new GridLayout(4,2,10,10));
+        setOpaque(false);
         JLabel lblcat = new JLabel("Loại");
         add(lblcat);
         cbbcat = new JComboBox<>();

@@ -120,4 +120,35 @@ public class ProductColorDAO {
         }
         return pc;
     }
+    public boolean addProductColor(ProductColor pc)
+    {
+        String sql="insert into product_color (product_id,color_id,url) values(?,?,?)";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,pc.getProductId());
+            stm.setInt(2,pc.getColorId());
+            stm.setString(3,pc.getURL());
+            return stm.executeUpdate()>0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean updateProductColor(ProductColor pc)
+    {
+        String sql="update product_color set product_id =?,color_id=?,url=? where product_color_id =?";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,pc.getProductId());
+            stm.setInt(2,pc.getColorId());
+            stm.setString(3,pc.getURL());
+            stm.setInt(4,pc.getProductColorId());
+            return stm.executeUpdate()>0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

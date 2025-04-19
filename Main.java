@@ -1,5 +1,5 @@
 
-import GUI.MainFrame;
+import GUI.Frame.MainFrame;
 
 
 

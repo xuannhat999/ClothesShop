@@ -56,7 +56,7 @@ public class ProductPanelToBuy extends JPanel{
         this.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                new ProductDetailPanel(SwingUtilities.getWindowAncestor(ProductPanelToBuy.this), p,userid);
+                new BuyProductVariant(SwingUtilities.getWindowAncestor(ProductPanelToBuy.this), p,userid);
             }
         });
     }

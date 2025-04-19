@@ -9,6 +9,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -21,7 +23,7 @@ public class ShoppingGUI extends MainPanel{
     private RoundedButton btncart;
     public ShoppingGUI(int userid)
     {
-        super(userid);
+        super();
         this.userid=userid;
         init();
     }
@@ -37,10 +39,16 @@ public class ShoppingGUI extends MainPanel{
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
         // PANEL 2
-        JPanel pnlbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,5));
-        pnlbtn.setOpaque(false);
+        JLabel lblblank = new JLabel();
         gbc.gridx=0;
         gbc.gridy=0;
+        gbc.weightx=1;
+        gbc.weighty=1;
+        pnlcon2.add(lblblank,gbc);
+        JPanel pnlbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,5));
+        pnlbtn.setOpaque(false);
+        gbc.gridx=1;
+        gbc.gridy=1;
         gbc.weightx=1;
         gbc.weighty=0;
         pnlcon2.add(pnlbtn,gbc);
@@ -49,6 +57,8 @@ public class ShoppingGUI extends MainPanel{
         btncart.setButtonSize(70,50);
         btncart.setBackground(Theme.brown);
         pnlbtn.add(btncart);
+        ImageIcon iconcart = new ImageIcon("D:\\VSCode\\ClothesShop\\icon\\icons8-cart-40.png");
+        btncart.setIcon(iconcart);
 
 
 

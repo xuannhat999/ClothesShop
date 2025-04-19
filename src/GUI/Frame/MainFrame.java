@@ -1,10 +1,16 @@
-package GUI;
+package GUI.Frame;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import GUI.Header;
+import GUI.LeftMenu;
+import GUI.ProductManagerGUI;
+import GUI.ShoppingGUI;
+import GUI.Theme;
 
 public class MainFrame extends JFrame {
     private int userid;

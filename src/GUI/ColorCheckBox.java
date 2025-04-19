@@ -1,6 +1,7 @@
 package GUI;
 
 import DAO.ColorDAO;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ItemEvent;
@@ -32,7 +33,8 @@ public class ColorCheckBox extends JCheckBox{
         g.setColor(Color.decode(colordao.getColorFromId(colorid).getColorCode()));
         g.fillRect(0,0,size,size);
         g.setColor(Color.black);
-        g.drawRect(0, 0,size-1, size-1);
+        g.setStroke(new BasicStroke(2));
+        g.drawRect(0,0 ,size, size);
         g.dispose();
         setIcon(new ImageIcon(image));
     }
@@ -43,7 +45,20 @@ public class ColorCheckBox extends JCheckBox{
         g.setColor(Color.decode(colordao.getColorFromId(colorid).getColorCode()));
         g.fillRect(0,0,size,size);
         g.setColor(Color.cyan);
-        g.drawRect(0, 0, size-2, size-2);
+        g.setStroke(new BasicStroke(4));
+        g.drawRect(0, 0, size, size);
+        g.dispose();
+        setIcon(new ImageIcon(image));
+    }
+    public void setUnabled()
+    {
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+        g.setColor(Color.decode(colordao.getColorFromId(colorid).getColorCode()));
+        g.fillRect(0,0,size,size);
+        g.setColor(Color.red);
+        g.setStroke(new BasicStroke(4));
+        g.drawRect(0, 0, size, size);
         g.dispose();
         setIcon(new ImageIcon(image));
     }
@@ -56,8 +71,10 @@ public class ColorCheckBox extends JCheckBox{
                 {
                     setSelectedIcon();
                 }
-                else
+                else if(e.getStateChange()!=ItemEvent.SELECTED)
+                {
                     setUnselectedIcon();
+                }
             }
             
         });

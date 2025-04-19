@@ -1,7 +1,10 @@
-package GUI;
+package GUI.Frame;
 
 import BUS.UserBUS;
 import DTO.User;
+import GUI.Header;
+import GUI.RoundedButton;
+import GUI.Theme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
