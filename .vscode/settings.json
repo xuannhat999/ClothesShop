@@ -5,5 +5,6 @@
         "c:\\Users\\ASUS\\Desktop\\itext-pdfa-5.5.13.3\\itext-pdfa-5.5.13.3.jar",
         "c:\\Users\\ASUS\\Desktop\\itext-pdfa-5.5.13.3\\itext-pdfa-5.5.13.3-javadoc.jar",
         "c:\\Users\\ASUS\\Desktop\\itext-pdfa-5.5.13.3\\itext-pdfa-5.5.13.3-sources.jar"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }

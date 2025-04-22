@@ -19,7 +19,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class InvoiceManagerGUI extends MainPanel {
     private JTable tblInvoice;
-    private DefaultTableModel mdlInvoice;
+    private static DefaultTableModel mdlInvoice;
     private InvoiceBUS invoiceBUS = new InvoiceBUS();
     private RoundedButton btnApprove,btnCancelInvoice,btnPrintInvoice,btnFilterDate,btnReport;
     private JDateChooser dateFrom = new JDateChooser();
@@ -76,7 +76,7 @@ public class InvoiceManagerGUI extends MainPanel {
          btnFilterDate = new RoundedButton("Lọc theo thời gian", 20);
         btnReport = new RoundedButton("Thống kê", 20);
 
-<<<<<<< HEAD
+
         // Set Size 
         btnApprove.setButtonSize(150, 50);
         btnCancelInvoice.setButtonSize(150, 50);
@@ -86,15 +86,7 @@ public class InvoiceManagerGUI extends MainPanel {
 
         // Set màu và kích thước nếu muốn
         btnApprove.setBackground(Theme.brown);
-=======
-        // Set màu và kích thước 
-        btnApprove.setBackground(Theme.light1);
-        btnApprove.setFont(15, Color.BLACK);
-        btnApprove.setBorderColor(new Color(180, 180, 180));
-        btnApprove.setBorderWidth(2);
-        btnApprove.setButtonSize(140, 40);
-        
->>>>>>> 4b2632a0c07350f0bd1e309a74b97719bca8da89
+
         btnCancelInvoice.setBackground(Theme.light1);
         btnCancelInvoice.setFont(14, Color.BLACK);
         btnCancelInvoice.setBorderColor(new Color(180, 180, 180));
@@ -155,7 +147,7 @@ public class InvoiceManagerGUI extends MainPanel {
     }
 
     // Hàm tải dữ liệu hóa đơn vào bảng
-    private void loadDataTable(List<Invoice> invoices) {
+    private static void loadDataTable(List<Invoice> invoices) {
         
         mdlInvoice.setRowCount(0);
         for (Invoice invoice : invoices) {
@@ -172,6 +164,9 @@ public class InvoiceManagerGUI extends MainPanel {
         }
     }
 
+    public void loadData() {
+        loadDataTable(invoiceBUS.getAllInvoices());
+    }
 
 
     private void addEvent() {
@@ -274,7 +269,7 @@ public class InvoiceManagerGUI extends MainPanel {
         });
 
         btnadd.addActionListener(e -> {
-            new AddInvoiceForm(this.userid).setVisible(true);
+            new AddInvoiceForm(this.employeeid,this).setVisible(true);
             
         });
         btnReport.addActionListener(e -> {

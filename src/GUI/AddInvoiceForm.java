@@ -6,6 +6,8 @@ import DAO.InvoiceDAO;
 import DAO.InvoiceDetailDAO;
 import DTO.Invoice;
 import DTO.InvoiceDetail;
+import BUS.InvoiceBUS;
+import GUI.InvoiceManagerGUI;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -23,14 +25,17 @@ public class AddInvoiceForm extends JFrame {
     private JTable table;
     private DefaultTableModel model;
     private int UserID;
-
-    public AddInvoiceForm(int userID) {
+    private InvoiceBUS invoiceBUS = new InvoiceBUS();
+    private InvoiceManagerGUI parentGUI;
+    public AddInvoiceForm(int userID,InvoiceManagerGUI parentGUI) {
         setTitle("Thêm Hóa Đơn");
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        initUI();
         this.UserID = userID;
+        this.parentGUI = parentGUI;
+        initUI();
+
     }
 
     private void initUI() {
@@ -104,6 +109,7 @@ public class AddInvoiceForm extends JFrame {
 
         btnSave.addActionListener(e -> {
             addInvoice();
+            
         });
 
         layout.setHorizontalGroup(
@@ -202,6 +208,8 @@ public class AddInvoiceForm extends JFrame {
             }
 
             JOptionPane.showMessageDialog(null, "Thêm hóa đơn thành công!");
+            parentGUI.loadData(); // Load lại dữ liệu
+            dispose();
 
         } catch (Exception ex) {
             ex.printStackTrace();
