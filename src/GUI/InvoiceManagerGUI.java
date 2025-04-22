@@ -4,6 +4,9 @@ import DTO.Invoice;
 import DTO.InvoiceDetail;
 import BUS.InvoiceBUS;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -73,6 +76,7 @@ public class InvoiceManagerGUI extends MainPanel {
          btnFilterDate = new RoundedButton("Lọc theo thời gian", 20);
         btnReport = new RoundedButton("Thống kê", 20);
 
+<<<<<<< HEAD
         // Set Size 
         btnApprove.setButtonSize(150, 50);
         btnCancelInvoice.setButtonSize(150, 50);
@@ -82,10 +86,38 @@ public class InvoiceManagerGUI extends MainPanel {
 
         // Set màu và kích thước nếu muốn
         btnApprove.setBackground(Theme.brown);
+=======
+        // Set màu và kích thước 
+        btnApprove.setBackground(Theme.light1);
+        btnApprove.setFont(15, Color.BLACK);
+        btnApprove.setBorderColor(new Color(180, 180, 180));
+        btnApprove.setBorderWidth(2);
+        btnApprove.setButtonSize(140, 40);
+        
+>>>>>>> 4b2632a0c07350f0bd1e309a74b97719bca8da89
         btnCancelInvoice.setBackground(Theme.light1);
+        btnCancelInvoice.setFont(14, Color.BLACK);
+        btnCancelInvoice.setBorderColor(new Color(180, 180, 180));
+        btnCancelInvoice.setBorderWidth(2);
+        btnCancelInvoice.setButtonSize(140, 40);
+        
         btnPrintInvoice.setBackground(Theme.light1);
+        btnPrintInvoice.setFont(14, Color.BLACK);
+        btnPrintInvoice.setBorderColor(new Color(180, 180, 180));
+        btnPrintInvoice.setBorderWidth(2);
+        btnPrintInvoice.setButtonSize(140, 40);
+        
         btnFilterDate.setBackground(Theme.light1);
+        btnFilterDate.setFont(14, Color.BLACK);
+        btnFilterDate.setBorderColor(new Color(180, 180, 180));
+        btnFilterDate.setBorderWidth(2);
+        btnFilterDate.setButtonSize(160, 40);
+        
         btnReport.setBackground(Theme.light1);
+        btnReport.setFont(14, Color.BLACK);
+        btnReport.setBorderColor(new Color(180, 180, 180));
+        btnReport.setBorderWidth(2);
+        btnReport.setButtonSize(140, 40);
 
         // Thêm vào pnlcon1
         GridBagConstraints gbcBtn = new GridBagConstraints();
@@ -240,15 +272,22 @@ public class InvoiceManagerGUI extends MainPanel {
         
             loadDataTable(invoiceBUS.getInvoicesByDateRange(from, to));
         });
-        
-    //     btnReport.addActionListener(e -> {
-    //         double revenue = invoiceBUS.getTotalRevenue();
-    //         JOptionPane.showMessageDialog(this, "Tổng doanh thu: " + revenue + " VND");
-    //     });
+
+        btnadd.addActionListener(e -> {
+            new AddInvoiceForm(this.userid).setVisible(true);
+            
+        });
+        btnReport.addActionListener(e -> {
+            new ThongKeGui().setVisible(true);
+        });
+    }
+
         
     // }
-
+    // public static void main(String[] args) {
+    //     new InvoiceManagerGUI(1);
+    // }
     
 }
 
-}
+

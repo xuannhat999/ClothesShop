@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThongKeGui",
+            "request": "launch",
+            "mainClass": "GUI.ThongKeGui",
+            "projectName": "ClothesShop_e6ab7e38"
+        },
+        {
+            "type": "java",
+            "name": "InvoiceManagerGUI",
+            "request": "launch",
+            "mainClass": "GUI.InvoiceManagerGUI",
+            "projectName": "ClothesShop_e6ab7e38"
+        },
+        {
+            "type": "java",
+            "name": "AddInvoiceForm",
+            "request": "launch",
+            "mainClass": "GUI.AddInvoiceForm",
+            "projectName": "ClothesShop_e6ab7e38"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",

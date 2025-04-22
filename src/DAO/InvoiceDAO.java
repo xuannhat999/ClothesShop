@@ -46,21 +46,31 @@ public class InvoiceDAO {
     }
 
     // Thêm hóa đơn mới
-    public boolean addInvoice(Invoice invoice) {
-        String query = "INSERT INTO invoices (user_id, employee_id, total_amount, create_date, payment_method_id, bank_account_id) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+    public static int addInvoice(Invoice invoice) {
+        String query = "INSERT INTO invoice (user_id, employee_id, total_amount, create_date, payment_method_id,Status) VALUES (?, ?, ?, ?, ?,?)";
+        try (
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, invoice.getUserId());
             pstmt.setInt(2, invoice.getEmployeeId());
             pstmt.setBigDecimal(3, invoice.getTotalAmount());
             pstmt.setDate(4, new java.sql.Date(invoice.getCreateDate().getTime()));
             pstmt.setInt(5, invoice.getPaymentMethodId());
-            // pstmt.setInt(6, invoice.getBankAccountId());
+            pstmt.setString(6,"pending");
+            
+    
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;  // Nếu có ít nhất 1 dòng bị ảnh hưởng thì thành công
+    
+            if (rowsAffected > 0) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // ✅ Trả về invoice_id mới tạo
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return -1; // ❌ Lỗi
     }
 
     // Cập nhật hóa đơn
