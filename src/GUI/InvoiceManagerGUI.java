@@ -263,11 +263,11 @@ public class InvoiceManagerGUI extends MainPanel {
             new AddInvoiceForm(this.userid).setVisible(true);
             
         });
+        btnReport.addActionListener(e -> {
+            new ThongKeGui().setVisible(true);
+        });
     }
-    //     btnReport.addActionListener(e -> {
-    //         double revenue = invoiceBUS.getTotalRevenue();
-    //         JOptionPane.showMessageDialog(this, "Tổng doanh thu: " + revenue + " VND");
-    //     });
+
         
     // }
     // public static void main(String[] args) {

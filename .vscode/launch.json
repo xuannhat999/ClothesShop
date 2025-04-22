@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThongKeGui",
+            "request": "launch",
+            "mainClass": "GUI.ThongKeGui",
+            "projectName": "ClothesShop_e6ab7e38"
+        },
+        {
+            "type": "java",
             "name": "InvoiceManagerGUI",
             "request": "launch",
             "mainClass": "GUI.InvoiceManagerGUI",
