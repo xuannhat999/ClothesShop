@@ -43,7 +43,44 @@ public class InvoiceDetailDAO {
         }
         return list;
     }
-    
+    public static double getUnitPriceByVariantId(String variantId) {
+        String sql = "SELECT p.price " +
+                 "FROM product_variant pv " +
+                 "JOIN product_color pc ON pv.product_color_id = pc.product_color_id " +
+                 "JOIN product p ON pc.product_id = p.product_id " +
+                 "WHERE pv.product_variant_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, variantId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0; // Trường hợp không tìm thấy
+    }
 
+    public static boolean insertInvoiceDetail(InvoiceDetail detail) {
+        String sql = "INSERT INTO invoice_detail (invoice_id, product_variant_id, quantity, amount) VALUES (?, ?, ?, ?)";
+        
+        try 
+        (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, detail.getInvoiceId());
+            pstmt.setInt(2, detail.getProductVariantId());
+            pstmt.setInt(3, detail.getQuantity());
+            pstmt.setBigDecimal(4, detail.getAmount());
+    
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return false;
+    }
 
 }

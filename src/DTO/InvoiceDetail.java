@@ -1,12 +1,13 @@
 package DTO;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class InvoiceDetail {
     private int invoiceId;  // Mã hóa đơn
     private int productVariantId;  // Mã sản phẩm
     private int quantity;  // Số lượng
-    private Double amount;  // Số tiền (tính theo sản phẩm x số lượng)
+    private BigDecimal amount;  // Số tiền/sp
 
     // Getter và Setter
     public int getInvoiceId() {
@@ -33,11 +34,11 @@ public class InvoiceDetail {
         this.quantity = quantity;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

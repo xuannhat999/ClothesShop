@@ -3,7 +3,7 @@ package GUI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.text.Document;
+//import javax.swing.text.Document;
 
 import BUS.InvoiceDetailBUS;
 import DAO.InvoiceDetailDAO;
@@ -18,22 +18,26 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
 public class InvoiceDetailFrame extends JFrame {
-    private static final String PageSize = null;
+    // private static final String PageSize = null;
     private JTable table;
     private DefaultTableModel model;
     private JLabel lblCustomerName, lblCustomerAddress, lblDate, lblTotal,lbltransfer;
     private InvoiceDetailBUS s = new InvoiceDetailBUS();
     private int ID,user_id;
 
-    public InvoiceDetailFrame(int invoiceId,int user_id) {
+    public InvoiceDetailFrame(int invoiceId,int User_id) {
         this.ID = invoiceId;
-        this.user_id = user_id;
+        this.user_id = User_id;
         setTitle("Chi tiết hóa đơn #" + invoiceId);
         setSize(600, 1000);
         setLocationRelativeTo(null);
@@ -159,22 +163,21 @@ btnExportPDF.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 // Xử lý khi bấm nút
 btnExportPDF.addActionListener(e -> {
-    // JFileChooser fileChooser = new JFileChooser();
-    // fileChooser.setDialogTitle("Lưu hóa đơn dưới dạng PDF");
-    // fileChooser.setSelectedFile(new File("HoaDon_" + ID + ".pdf"));
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Lưu hóa đơn dưới dạng PDF");
+    fileChooser.setSelectedFile(new File("HoaDon_" + ID + ".pdf"));
 
-    // int userSelection = fileChooser.showSaveDialog(this);
-    // if (userSelection == JFileChooser.APPROVE_OPTION) {
-    //     File fileToSave = fileChooser.getSelectedFile();
-    //     exportToPDF(fileToSave.getAbsolutePath());
-    //}
+    int userSelection = fileChooser.showSaveDialog(this);
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        File fileToSave = fileChooser.getSelectedFile();
+        exportToPDF(fileToSave.getAbsolutePath());
+    }
 });
 
 // Tạo panel chứa nút, thêm vào cuối bottomPanel
 JPanel exportPanel = new JPanel();
 exportPanel.setBackground(Color.WHITE);
 exportPanel.add(btnExportPDF);
-
 bottomPanel.add(exportPanel, BorderLayout.CENTER); // Đặt ở giữa panel dưới
     }
 
@@ -208,37 +211,37 @@ bottomPanel.add(exportPanel, BorderLayout.CENTER); // Đặt ở giữa panel d�
     lblTotal.setText("Tổng cộng: " + String.format("%.0f", totalAmount) + " VND");
 }
 
-// public void exportToPDF(String filePath) {
-//     try {
-//         // Tạo Document với khổ giấy A4
-//         Document document = new Document(PageSize.A4.rotate(), 36, 36, 36, 36); // Khổ ngang
-//         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
-//         document.open();
 
-//         // Chụp hình frame thành ảnh
-//         BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-//         Graphics2D g2 = image.createGraphics();
-//         this.paintAll(g2); // hoặc this.printAll(g2);
-//         g2.dispose();
+public void exportToPDF(String filePath) {
+    try {
+        Document document = new Document(PageSize.A4.rotate(), 36, 36, 36, 36);
+        PdfWriter.getInstance(document, new FileOutputStream(filePath));
+        document.open();
 
-//         // Chuyển ảnh thành đối tượng Image của iText
-//         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//         ImageIO.write(image, "png", baos);
-//         Image img = Image.getInstance(baos.toByteArray());
+        // Chụp lại nội dung Frame thành ảnh
+        BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        this.paint(g2); // hoặc paintAll(g2)
+        g2.dispose();
 
-//         // Co ảnh cho vừa trang
-//         img.scaleToFit(PageSize.A4.getHeight() - 72, PageSize.A4.getWidth() - 72); // A4 ngang
-//         img.setAlignment(Element.ALIGN_CENTER);
-//         document.add(img);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baos);
+        Image img = Image.getInstance(baos.toByteArray());
 
-//         ((FileOutputStream) document).close();
-//         writer.close();
+        // Scale ảnh cho vừa khổ ngang A4
+        img.scaleToFit(PageSize.A4.getHeight() - 72, PageSize.A4.getWidth() - 72); // khổ ngang
+        img.setAlignment(Image.ALIGN_CENTER);
+        document.add(img);
 
-//         JOptionPane.showMessageDialog(this, "Xuất PDF thành công:\n" + filePath);
-//     } catch (Exception e) {
-//         e.printStackTrace();
-//         JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF:\n" + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-//     }
-// }
+        document.close();
+
+        JOptionPane.showMessageDialog(this, "Xuất PDF thành công:\n" + filePath);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF:\n" + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
 }
 
