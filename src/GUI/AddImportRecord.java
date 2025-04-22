@@ -339,7 +339,7 @@ public class AddImportRecord extends JDialog{
                     {
                         importdetaildao.removeImportDetail(i.getImportDetailId());
                     }
-                    importdetaildao.
+
                 }
             }
             
