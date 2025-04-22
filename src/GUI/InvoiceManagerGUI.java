@@ -21,11 +21,13 @@ public class InvoiceManagerGUI extends MainPanel {
     private RoundedButton btnApprove,btnCancelInvoice,btnPrintInvoice,btnFilterDate,btnReport;
     private JDateChooser dateFrom = new JDateChooser();
     private JDateChooser dateTo = new JDateChooser();
+    private int employeeid; 
 
-
-    public InvoiceManagerGUI(int userid) {
-        super(userid);
+    public InvoiceManagerGUI(int employeeid) {
+        super();
+        this.employeeid = employeeid;
         init();
+
     }
 
     private void init() {
@@ -71,6 +73,13 @@ public class InvoiceManagerGUI extends MainPanel {
          btnFilterDate = new RoundedButton("Lọc theo thời gian", 20);
         btnReport = new RoundedButton("Thống kê", 20);
 
+        // Set Size 
+        btnApprove.setButtonSize(150, 50);
+        btnCancelInvoice.setButtonSize(150, 50);
+        btnPrintInvoice.setButtonSize(150, 50);
+        btnFilterDate.setButtonSize(150, 50);
+        btnReport.setButtonSize(150, 50);
+
         // Set màu và kích thước nếu muốn
         btnApprove.setBackground(Theme.brown);
         btnCancelInvoice.setBackground(Theme.light1);
@@ -83,7 +92,7 @@ public class InvoiceManagerGUI extends MainPanel {
         gbcBtn.insets = new Insets(5, 10, 5, 10);
         gbcBtn.gridy = 0;
         gbcBtn.weightx = 1;
-        gbcBtn.fill = GridBagConstraints.NONE;
+        gbcBtn.fill = GridBagConstraints.BOTH;
 
         gbcBtn.gridx = 0; pnlcon1.add(btnApprove, gbcBtn);
         gbcBtn.gridx = 1; pnlcon1.add(btnCancelInvoice, gbcBtn);

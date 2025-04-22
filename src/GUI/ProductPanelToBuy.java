@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -39,16 +41,16 @@ public class ProductPanelToBuy extends JPanel{
         lblpname.setBorder(new EmptyBorder(5,10,5,10));
         pnlinfo.add(lblpname);
 
-        lblprice = new JLabel(p.getPrice().toString()+ "đ");
+        lblprice = new JLabel(Theme.df.format(p.getPrice())+ "đ");
         lblprice.setFont(new Font("Arial",Font.CENTER_BASELINE,12));
         lblprice.setBorder(new EmptyBorder(0,10,5,10));
         pnlinfo.add(lblprice);
 
-        /*ImageIcon im = new ImageIcon(productvariantbus.getProductImageFromProductId(p.getProductId()));
+        ImageIcon im = new ImageIcon(productvariantbus.getAvatarFromPId(p.getProductId()));
         im.setImage(im.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
         lblimage = new JLabel(im);
         lblimage.setBorder(new EmptyBorder(0,0,0,0));
-        add(lblimage,BorderLayout.CENTER);*/
+        add(lblimage,BorderLayout.CENTER);
         addEvent();
     }   
     public void addEvent()

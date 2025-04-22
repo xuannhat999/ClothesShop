@@ -1,6 +1,7 @@
 package GUI.Frame;
 
 import GUI.Header;
+import GUI.InvoiceManagerGUI;
 import GUI.LeftMenu;
 import GUI.ProductManagerGUI;
 import GUI.ShoppingGUI;
@@ -37,6 +38,7 @@ public class AdminFrame extends JFrame{
         main = new JPanel(cardlayout);
         main.add(new ShoppingGUI(1),"1");
         main.add(new ProductManagerGUI(1),"2");
+        main.add(new InvoiceManagerGUI(1),"4");
         add(main,BorderLayout.CENTER);
         setVisible(true);
     }

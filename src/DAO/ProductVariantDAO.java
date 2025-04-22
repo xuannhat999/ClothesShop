@@ -173,6 +173,19 @@ public class ProductVariantDAO {
         }
         return false;
     }
+    public boolean removeProductVariant(int pvid)
+    {
+        String sql="delete from product_variant where product_variant_id=?";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, pvid);
+            return stm.executeUpdate()>0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
     
 

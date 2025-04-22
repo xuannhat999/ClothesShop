@@ -177,7 +177,7 @@ public class PayPanel extends JDialog{
             IsBanking(false);
         // PANEL BOTTOM
         total = cartbus.getTotalFromCartList(cartlist);
-        lbltotal = new JLabel("Tổng tiền:  "+ total.toString());
+        lbltotal = new JLabel("Tổng tiền:  "+ Theme.df.format(total));
         lbltotal.setFont(Theme.infofont1);
         pnlbtn.add(lbltotal);
         

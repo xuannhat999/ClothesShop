@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -59,6 +58,7 @@ public class Header extends JPanel{
         btn.setContentAreaFilled(false);
         btn.setOpaque(false);
         btn.setFont(new Font("Roboto",Font.BOLD,12));
+        btn.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Theme.brown));
         return btn;
     }
     public void addEvent()

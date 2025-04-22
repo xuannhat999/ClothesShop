@@ -84,6 +84,18 @@ public class ProductVariantBUS {
     {
         return productcolordao.getProductColorFromId(pcid);
     }
+    public String getAvatarFromPId(int product_id)
+    {
+        return productcolordao.getAvatarProductFromProductId(product_id);
+    }
+    public boolean removeProductVariant(int pvid)
+    {
+        return productvariantdao.removeProductVariant(pvid);
+    }
+    public boolean removeProductColor(int pcid)
+    {
+        return productcolordao.removeProductColor(pcid);
+    }
 
 
 

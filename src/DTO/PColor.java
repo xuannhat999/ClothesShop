@@ -23,4 +23,10 @@ public class PColor {
     public String getColorName() { return colorName; }
     public void setColorName(String colorName) { this.colorName = colorName; }
     public String getColorCode(){return colorCode;}
+
+    @Override
+    public String toString()
+    {
+        return colorName;
+    }
 }

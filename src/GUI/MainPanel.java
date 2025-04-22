@@ -59,6 +59,7 @@ public class MainPanel extends JPanel{
 
         // PANEL 3
         pnlcon3 = new JPanel(new GridBagLayout());
+        pnlcon3.setBorder(new EmptyBorder(0,0,0,0));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -84,6 +85,7 @@ public class MainPanel extends JPanel{
         JPanel pnlsearch = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlsearch.setPreferredSize(new Dimension(400,60));
         pnlsearch.setMaximumSize(pnlsearch.getPreferredSize());
+        pnlsearch.setMinimumSize(pnlsearch.getPreferredSize());
         pnlsearch.setOpaque(false);
         gbc.gridx=0;
         gbc.gridy=1;
@@ -100,7 +102,7 @@ public class MainPanel extends JPanel{
         btnfind.setPreferredSize(new Dimension(50,50));
         btnfind.setBackground(Theme.brown);
         pnlsearch.add(btnfind);
-        btnfind.setIcon(new ImageIcon("ClothesShop\\icon\\icons8-search-30.png"));
+        btnfind.setIcon(new ImageIcon("icon/icons8-search-30.png"));
 
         btnfilter = new RoundedButton("",25);
         btnfilter.setPreferredSize(new Dimension(50,50));
@@ -108,7 +110,7 @@ public class MainPanel extends JPanel{
         btnfilter.setBorderWidth(1);
         btnfilter.setBorderColor(Theme.brown);
         pnlsearch.add(btnfilter);
-        btnfilter.setIcon(new ImageIcon("ClothesShop\\icon\\icons8-filter-30.png"));
+        btnfilter.setIcon(new ImageIcon("icon/icons8-filter-30.png"));
 
         btnadd = new RoundedButton("Thêm", 20);
         btnadd.setBackground(Theme.brown);
@@ -162,7 +164,7 @@ public class MainPanel extends JPanel{
         pnlcon3.add(btnsave,gbc);
 
         
-        setButtonVisible(false);
+        setButtonEnable(false);
         /*pnlcon1.setOpaque(true);
         pnlcon2.setOpaque(true);
         pnlcon3.setOpaque(true);
@@ -175,13 +177,11 @@ public class MainPanel extends JPanel{
         pnlcon5.setBackground(Color.gray);*/
         
     }    
-    public void setButtonVisible(boolean e)
+    public void setButtonEnable(boolean e)
     {
-        btnsave.setVisible(e);
-        btncancel.setVisible(e);
-        btndetail.setVisible(e);
-        btnupdate.setVisible(e);
-        btnremove.setVisible(e);
+        btndetail.setEnabled(e);
+        btnupdate.setEnabled(e);
+        btnremove.setEnabled(e);
     }
 
 

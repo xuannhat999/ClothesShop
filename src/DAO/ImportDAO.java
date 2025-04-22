@@ -177,6 +177,30 @@ public class ImportDAO {
     
         return null; // Không tìm thấy
     }
+    public List<ImportProduct> getImportRecordBySupplierId(int supid)
+    {
+        String sql = "select * from import_product where supplier_id =?";
+        List<ImportProduct> il=new ArrayList<>();
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1,supid);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next())
+            {
+                il.add(new ImportProduct(rs.getInt("import_product_id"),
+                                            rs.getInt("employee_id"),
+                                            rs.getBigDecimal("total_amount"),
+                                            rs.getDate("created_date"),
+                                            rs.getInt("supplier_id"),
+                                            rs.getInt("payment_method")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return il;
+    }
     
         
 }

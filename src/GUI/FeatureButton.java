@@ -25,29 +25,21 @@ public class FeatureButton extends JButton{
         setHorizontalAlignment(LEFT);
         setForeground(Color.darkGray);
         setIconTextGap(15);
-        switch(featureid)
-        {
-            case 1:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-buy-40.png"));
-                setContentAreaFilled(true);
-                break;
-            case 2:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-clothes-40.png"));
-                break;
-            case 3:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-import-40.png"));
-                break;
-            case 4:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-bill-40.png"));
-                break;
-            case 5:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-customers-40.png"));
-                break;
-            case 6:
-                setIcon(new ImageIcon("ClothesShop\\icon\\icons8-management-40.png"));
-                break;
+        String basePath = "icon/";
+        String iconName = switch (featureid) {
+            case 1 -> "icons8-buy-40.png";
+            case 2 -> "icons8-clothes-40.png";
+            case 3 -> "icons8-import-40.png";
+            case 4 -> "icons8-bill-40.png";
+            case 5 -> "icons8-customers-40.png";
+            case 6 -> "icons8-management-40.png";
+            default -> null;
+            };
+        if (iconName != null) {
+        setIcon(new ImageIcon(basePath + iconName));
+        if (featureid == 1) setContentAreaFilled(true);
+}
 
-        }
         addEvent();
     }
     private void addEvent()

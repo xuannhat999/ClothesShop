@@ -6,20 +6,24 @@ import DAO.ColorDAO;
 import DAO.ProductColorDAO;
 import DTO.Product;
 import DTO.ProductVariant;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -27,7 +31,7 @@ public class ProductVariantPanel extends JPanel{
     private ProductVariant pv;
     private int buyquan;
     private JPanel pnlinfo,pnlbtn,pnlimage;
-    private JLabel lblpname,lblpcolor,lblpsize,lblprice;
+    private JLabel lblpname,lblpcolor,lblpsize,lblprice,lblimage;
     private ProductVariantBUS productVariantbus= new ProductVariantBUS();
     private ColorDAO colordao = new ColorDAO();
     private ProductColorDAO productcolordao = new ProductColorDAO();
@@ -56,20 +60,25 @@ public class ProductVariantPanel extends JPanel{
         gbc.fill= GridBagConstraints.BOTH;
         gbc.insets = new Insets(0,0,0,0);
 
-        pnlimage = new JPanel();
+        pnlimage = new JPanel(new BorderLayout());
         pnlimage.setPreferredSize(new Dimension(100,100));
         pnlimage.setMinimumSize(pnlimage.getPreferredSize());
-        pnlimage.setOpaque(false);
+        pnlimage.setBorder(BorderFactory.createLineBorder(Theme.brown,1));
         gbc.gridx=0;
         gbc.gridy=0;
         gbc.weightx=0;
         gbc.weighty=0;
-    
         add(pnlimage,gbc);
+
+        ImageIcon pimage = new ImageIcon(productVariantbus.getProductColorFromPCId(pv.getProductColorId()).getURL());
+        pimage.setImage(pimage.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        lblimage = new JLabel(pimage);
+        pnlimage.add(lblimage,BorderLayout.CENTER);
 
         pnlinfo = new JPanel(new GridBagLayout());
         pnlinfo.setPreferredSize(new Dimension(900,100));
         pnlinfo.setOpaque(false);
+        pnlinfo.setBorder(new EmptyBorder(0,20,0,0));
         gbc.gridx=1;
         add(pnlinfo,gbc);
 
@@ -106,7 +115,7 @@ public class ProductVariantPanel extends JPanel{
             gbc.gridx=1;
             pnlinfo.add(lblpsize,gbc);
 
-            lblprice = new JLabel(getProductFromProductVariant().getPrice().toString()+" đ");
+            lblprice = new JLabel(Theme.df.format(getProductFromProductVariant().getPrice())+" đ");
             lblprice.setFont(Theme.infofont1);
             gbc.gridx=0;
             gbc.gridy=2;
@@ -120,7 +129,11 @@ public class ProductVariantPanel extends JPanel{
 
             btnremove = new RoundedButton("", 20);
             btnremove.setButtonSize(30,30);
-            btnremove.setBackground(Color.red);
+            btnremove.setBackground(Theme.redpastel);
+
+            ImageIcon removeicon = new ImageIcon("icon/icons8-remove-30.png");
+            removeicon.setImage(removeicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+            btnremove.setIcon(removeicon);
             pnlbtn.add(btnremove);
 
             addEvent();

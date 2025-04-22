@@ -2,7 +2,10 @@ package GUI;
 
 import BUS.ProductBUS;
 import DTO.Product;
+import GUI.FilterPanel.FilterDialog;
+import GUI.FilterPanel.ProductFilterPanel;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 public class ShoppingGUI extends MainPanel{
     private ProductBUS productbus = new ProductBUS();
@@ -21,6 +25,9 @@ public class ShoppingGUI extends MainPanel{
     private JPanel pnlproduct;
     private int userid;
     private RoundedButton btncart;
+    private ProductFilterPanel pfp;
+    private FilterDialog fd;
+
     public ShoppingGUI(int userid)
     {
         super();
@@ -34,17 +41,28 @@ public class ShoppingGUI extends MainPanel{
         pnlcon1.setVisible(false);
         pnlcon3.setVisible(false);
         btnadd.setVisible(false);
+        btndetail.setVisible(false);
+        btnremove.setVisible(false);
+        btnupdate.setVisible(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(5, 5, 5, 5);
+        pfp = new ProductFilterPanel();
+        fd = new FilterDialog(SwingUtilities.getWindowAncestor(this),pfp);
+        fd.setVisible(false);
         // PANEL 2
-        JLabel lblblank = new JLabel();
+        JLabel lblwelcome = new JLabel("Chào mừng đến với Clothesstore");
+        lblwelcome.setBorder(new EmptyBorder(20,20,20,20));
+        lblwelcome.setFont(new Font("Times New Roman",Font.LAYOUT_LEFT_TO_RIGHT,55));
         gbc.gridx=0;
         gbc.gridy=0;
         gbc.weightx=1;
         gbc.weighty=1;
-        pnlcon2.add(lblblank,gbc);
+        gbc.gridwidth=2;
+        pnlcon2.add(lblwelcome,gbc);
+
+
         JPanel pnlbtn = new JPanel(new FlowLayout(FlowLayout.RIGHT,5,5));
         pnlbtn.setOpaque(false);
         gbc.gridx=1;
@@ -57,7 +75,7 @@ public class ShoppingGUI extends MainPanel{
         btncart.setButtonSize(70,50);
         btncart.setBackground(Theme.brown);
         pnlbtn.add(btncart);
-        ImageIcon iconcart = new ImageIcon("D:\\VSCode\\ClothesShop\\icon\\icons8-cart-40.png");
+        ImageIcon iconcart = new ImageIcon("icon/icons8-cart-40.png");
         btncart.setIcon(iconcart);
 
 
@@ -78,6 +96,7 @@ public class ShoppingGUI extends MainPanel{
     }
     private void loadProductVariant(List<Product> pl)
     {
+        pnlproduct.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(3, 3, 3, 3);
@@ -98,6 +117,8 @@ public class ShoppingGUI extends MainPanel{
                 row++;
                 }
         }
+        pnlproduct.revalidate();
+        pnlproduct.repaint();
     }
     private void addEvent()
     {
@@ -109,9 +130,19 @@ public class ShoppingGUI extends MainPanel{
                 {
                     new CartPanel(userid,SwingUtilities.getWindowAncestor(ShoppingGUI.this));
                 }
+                else if(e.getSource()==btnfind)
+                {
+                    loadProductVariant(productbus.searchProduct(pfp.getSelectedCategory(),pfp.getSelectedMaterial(), pfp.getSelectedBrand(), pfp.getSelectedGender(),txfsearch.getText()));
+                }
+                else if(e.getSource() == btnfilter)
+                {
+                    fd.setVisible(true);
+                }
             }
         };
         btncart.addActionListener(al);
+        btnfind.addActionListener(al);
+        btnfilter.addActionListener(al);
     }
 
 }

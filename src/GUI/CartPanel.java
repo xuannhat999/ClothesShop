@@ -2,7 +2,6 @@ package GUI;
 
 import BUS.CartBUS;
 import BUS.ProductVariantBUS;
-import DAO.CartDAO;
 import DTO.Cart;
 import DTO.ProductVariant;
 import java.awt.Color;
@@ -17,6 +16,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -66,6 +66,8 @@ public class CartPanel extends JDialog{
         loadProductFromCart(cartbus.getAllCartFromUserId(userid));
         sp=new JScrollPane(pnlproduct);
         sp.setPreferredSize(new Dimension(1100,500));
+        sp.setBackground(Color.white);
+        sp.getViewport().setBackground(Color.white);
         gbc.weightx=1;
         gbc.weighty=1;
         gbc.gridy=1;
@@ -143,7 +145,8 @@ public class CartPanel extends JDialog{
     public void loadPrice()
     {   
         total = cartbus.getTotalFromCartList(cartbus.getAllCartFromUserId(userid));
-        lblprice.setText("Tổng tiền:  "+total.toString());
+        String t = Theme.df.format(total);
+        lblprice.setText("Tổng tiền:  "+t+"đ");
     }
     private void addEvent()
     {

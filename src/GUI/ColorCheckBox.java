@@ -23,6 +23,7 @@ public class ColorCheckBox extends JCheckBox{
     private void init()
     {
         setBorder(new EmptyBorder(0,0,0,0));
+        setOpaque(false);
         setUnselectedIcon();
         addEvent();
     }

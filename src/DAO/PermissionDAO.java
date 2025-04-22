@@ -34,7 +34,7 @@ public class PermissionDAO {
     }
     public List<Permission> getPermissionFromRoleId(int id)
     {
-        String sql ="select * from permisstion where role_id =?";
+        String sql ="select * from permission where role_id =?";
         List<Permission> pl = new ArrayList<>();
         try {
             Connection conn = DatabaseConnection.getConnection();

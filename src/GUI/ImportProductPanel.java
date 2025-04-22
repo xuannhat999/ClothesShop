@@ -6,6 +6,7 @@ import DAO.PaymentMethodDAO;
 import DTO.ImportProduct;
 import DTO.Product;
 import DTO.Supplier;
+import GUI.FilterPanel.BigDialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -14,8 +15,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -44,12 +47,21 @@ public class ImportProductPanel extends MainPanel{
         gbc.insets = new Insets(10,10,10,10);
         pnlcon1.setVisible(false);
         pnlcon3.setVisible(false);
-
-        //remove(pnlcon1);
         revalidate();
         repaint();
 
+        btnadd.setText("Thêm phiếu nhập");
         //PANEL 2
+        
+        JLabel lblimport = new JLabel("Quản lý kho");
+        lblimport.setFont(Theme.infofont1);
+        lblimport.setBorder(new EmptyBorder(10,10,0,0));
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.weightx=1;
+        gbc.weighty=0;
+        pnlcon2.add(lblimport,gbc);
+
         btnsupplier = new RoundedButton("Nhà cung cấp",20);
         btnsupplier.setButtonSize(100, 40);
         btnsupplier.setBackground(Theme.light3);
@@ -95,7 +107,7 @@ public class ImportProductPanel extends MainPanel{
 
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                setButtonVisible(true);
+                setButtonEnable(true);
             }
             
         });
@@ -118,9 +130,15 @@ public class ImportProductPanel extends MainPanel{
 
                     }
                 }
+                else if(e.getSource()==btnsupplier)
+                {
+                    SupplierPanel sp = new SupplierPanel();
+                    new BigDialog(sp);
+                }
             }
         };
         btnadd.addActionListener(al);
         btnupdate.addActionListener(al);
+        btnsupplier.addActionListener(al);
     }
 }

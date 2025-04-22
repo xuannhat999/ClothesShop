@@ -69,7 +69,7 @@ public class AddURLToProductColorPanel extends JPanel{
             gbc.gridx=0;
             gbc.gridy=row;
             pnlmain.add(i,gbc);
-
+            i.setSelected(false);
             JTextField txf =new JTextField();
             txfurl.add(txf);
             gbc.gridx=1;

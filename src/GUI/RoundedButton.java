@@ -25,6 +25,8 @@ public class RoundedButton extends JButton {
     // Thiết lập kích thước nút
     public void setButtonSize(int width, int height) {
         setPreferredSize(new Dimension(width, height));
+        setMaximumSize(getPreferredSize());
+        setMinimumSize(getPreferredSize());
         setSize(width, height);
         revalidate(); // Cập nhật bố cục
         repaint(); // Vẽ lại button

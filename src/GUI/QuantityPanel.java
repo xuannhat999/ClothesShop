@@ -2,8 +2,10 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,14 +38,26 @@ public class QuantityPanel extends JPanel{
         txfquan.setText(Integer.toString(quantity));
         add(txfquan,BorderLayout.CENTER);
 
-        btninquan = new JButton("+");
+        btninquan = new JButton();
         btninquan.setFocusPainted(false);
+        btninquan.setBorderPainted(false);
+        btninquan.setContentAreaFilled(false);
         btninquan.setPreferredSize(new Dimension(height,height));
+
+        ImageIcon inicon = new ImageIcon("icon/icons8-plus-24.png");
+        inicon.setImage(inicon.getImage().getScaledInstance(height-10, height-10,Image.SCALE_SMOOTH));
+        btninquan.setIcon(inicon);
         add(btninquan,BorderLayout.EAST);
 
-        btndequan = new JButton("-");
+        btndequan = new JButton();
         btndequan.setFocusPainted(false);
+        btndequan.setBorderPainted(false);
+        btndequan.setContentAreaFilled(false);
         btndequan.setPreferredSize(new Dimension(height,height));
+
+        ImageIcon deicon = new ImageIcon("icon/icons8-minus-48.png");
+        deicon.setImage(deicon.getImage().getScaledInstance(height-10, height-10,Image.SCALE_SMOOTH));
+        btndequan.setIcon(deicon);
         add(btndequan,BorderLayout.WEST);
 
         addEvent();

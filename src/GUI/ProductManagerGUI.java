@@ -11,6 +11,7 @@ import DTO.Material;
 import DTO.PColor;
 import DTO.Product;
 import DTO.ProductColor;
+import DTO.ProductVariant;
 import GUI.FilterPanel.AddURLToProductColorPanel;
 import GUI.FilterPanel.BigDialog;
 import GUI.FilterPanel.FilterDialog;
@@ -383,10 +384,19 @@ public class ProductManagerGUI extends MainPanel{
                 else if(e.getSource()==btnremove)
                 {
                     int productid = Integer.parseInt(txfproductid.getText());
+                    List<ProductColor> pcl = productvariantbus.getProductColorFromPID(productid);
+                    for(ProductColor i:pcl)
+                    {
+                        for(ProductVariant j: productvariantbus.getAllProductVariantFromPCID(i.getProductColorId()))
+                        {
+                            productvariantbus.removeProductVariant(j.getProductVariantId());
+                        }
+                        productvariantbus.removeProductColor(i.getProductColorId());
+                    }
                     productbus.removeProduct(productid);
                     loadDataTable(productbus.getAllProduct());
                     showProductInfo(false);
-                    tblproduct.setEnabled(false);
+                    setButtonEnable(false);
                     
                 }
                 else if(e.getSource()==btncancel)
@@ -400,6 +410,7 @@ public class ProductManagerGUI extends MainPanel{
                     btnsave.setVisible(false);
                     btncancel.setVisible(false);
                     tblproduct.setEnabled(true);
+                    setButtonEnable(false);
 
                 }
                 else if (e.getSource()== btnsave)
@@ -485,10 +496,12 @@ public class ProductManagerGUI extends MainPanel{
                             tblproduct.setEnabled(true);
                             btnsave.setVisible(false);
                             btncancel.setVisible(false);
+                            setButtonEnable(false);
                         
                 }
                 else if(e.getSource() == btnfind)
                 {
+                    new AccountPanel();
                     loadDataTable(productbus.searchProduct(pfp.getSelectedCategory(),pfp.getSelectedMaterial(),pfp.getSelectedBrand(),pfp.getSelectedGender(),txfsearch.getText()));
                 }
                 else if(e.getSource()==btnfilter)
@@ -539,9 +552,7 @@ public class ProductManagerGUI extends MainPanel{
                 {
                     showProductInfo(true);
                     loadProductInfo();
-                    btnupdate.setVisible(true);
-                    btnremove.setVisible(true);
-                    btndetail.setVisible(true);
+                    setButtonEnable(true);
                 }
             }
         });

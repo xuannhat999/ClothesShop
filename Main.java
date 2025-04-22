@@ -1,12 +1,8 @@
-
 import GUI.Frame.MainFrame;
-
-
-
 
 public class Main {
 public static void main(String[] args) {
-    MainFrame mainframe = new MainFrame(1);
-    
-    }   
+    // LoginFrame LoginFrame= new LoginFrame();    
+    new MainFrame(1);    
+}   
 }

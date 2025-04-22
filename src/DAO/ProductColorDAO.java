@@ -67,7 +67,7 @@ public class ProductColorDAO {
             ResultSet rs = stm.executeQuery();
             while(rs.next())
             {
-                image = rs.getString("url1");
+                image = rs.getString("url");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -145,6 +145,19 @@ public class ProductColorDAO {
             stm.setInt(2,pc.getColorId());
             stm.setString(3,pc.getURL());
             stm.setInt(4,pc.getProductColorId());
+            return stm.executeUpdate()>0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean removeProductColor(int pcid)
+    {
+        String sql="delete from product_color where product_color_id=?";
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, pcid);
             return stm.executeUpdate()>0;
         } catch (SQLException e) {
             e.printStackTrace();

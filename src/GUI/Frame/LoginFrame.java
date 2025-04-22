@@ -8,17 +8,21 @@ import GUI.Theme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 public class LoginFrame extends JFrame{
     private JPanel header;
     private JLabel lblname,lblpass;
@@ -32,7 +36,7 @@ public class LoginFrame extends JFrame{
     }
     private void init()
     {
-        setSize(980,980);
+        setSize(720 ,720);
         setUndecorated(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -52,31 +56,45 @@ public class LoginFrame extends JFrame{
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        lblname = new JLabel("Username");
+        JLabel lblstore = new JLabel("Clothesstore");
+        lblstore.setBorder(new EmptyBorder(30,30,30,30));
+        lblstore.setFont(new Font("Times New Roman",Font.LAYOUT_RIGHT_TO_LEFT,50));
+        lblstore.setForeground(Theme.brown);
+        ImageIcon icon = new ImageIcon("icon/icons8-clothes-64.png");
+        icon.setImage(icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+        lblstore.setIcon(icon);
+        lblstore.setIconTextGap(10);
         gbc.gridx=0;
         gbc.gridy=0;
+        gbc.weightx=0;
+        gbc.weighty=0;
+        pnlmainlogin.add(lblstore,gbc);
+        lblname = new JLabel("Username");
+        gbc.gridx=0;
+        gbc.gridy=1;
         gbc.weightx = 0;
         gbc.weighty = 0;
         pnlmainlogin.add(lblname,gbc);
 
         txfname = new JTextField();
         txfname.setPreferredSize(new Dimension(250,50)); 
-        gbc.gridy=1;
+        gbc.gridy=2;
         pnlmainlogin.add(txfname,gbc);
 
         lblpass = new JLabel("Password");
-        gbc.gridy=2;
+        gbc.gridy=3;
         pnlmainlogin.add(lblpass,gbc);
 
         txfpass = new JPasswordField();
         txfpass.setPreferredSize(new Dimension(250,50));
-        gbc.gridy=3;
+        gbc.gridy=4;
         pnlmainlogin.add(txfpass,gbc);
 
         btnlogin = new RoundedButton("Login", 10);
         btnlogin.setButtonSize(70 ,30);
-        btnlogin.setFont(12,Color.black);
-        gbc.gridy=4;
+        btnlogin.setBackground(Theme.brown);
+        btnlogin.setFont(12,Color.white);
+        gbc.gridy=5;
         pnlmainlogin.add(btnlogin,gbc);
 
         addEvent();
@@ -120,8 +138,17 @@ public class LoginFrame extends JFrame{
         User user = userbus.loginCheck(name,pass);
         if(user != null)
         {
-            new MainFrame(user.getRoleId());
-            this.dispose();
+            if(user.getRoleId()!=1)
+            {
+                new MainFrame(user.getUserId());
+                this.dispose();
+            }
+            else 
+            {
+                new AdminFrame();
+                this.dispose();
+            }
+            
         }
         else 
         {

@@ -40,4 +40,18 @@ public class Supplier {
     {
         return supplierName;
     }
+    // Trong lớp Supplier.java
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    Supplier other = (Supplier) obj;
+    return this.suppllierId == other.suppllierId;
+}
+
+@Override
+public int hashCode() {
+    return Integer.hashCode(suppllierId);
+}
+
 }

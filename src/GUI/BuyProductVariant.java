@@ -8,6 +8,7 @@ import DTO.Cart;
 import DTO.Product;
 import DTO.ProductColor;
 import DTO.ProductVariant;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
@@ -15,6 +16,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -23,7 +25,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,7 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class BuyProductVariant extends JDialog{
-    private JLabel lblpname,lbldescription,lblbrand,lblmaterial,lblpquantity;
+    private JLabel lblpname,lbldescription,lblbrand,lblmaterial,lblpquantity,lblimage;
     private JPanel pnlinfo,pnlimage;
     private Product p;
     private ProductBUS productbus = new ProductBUS();
@@ -77,22 +81,33 @@ public class BuyProductVariant extends JDialog{
         gbc.gridwidth=2;
         add(lblpname,gbc);
 
-        pnlimage = new JPanel();
+        pnlimage = new JPanel(new BorderLayout());
         pnlimage.setPreferredSize(new Dimension(300,300));
         pnlimage.setMaximumSize(pnlimage.getPreferredSize());
         pnlimage.setMinimumSize(pnlimage.getPreferredSize());
-        pnlimage.setOpaque(true);
+        pnlimage.setBorder(BorderFactory.createLineBorder(Theme.brown,1));
         gbc.gridy=1;
         gbc.weightx=0;
         gbc.weighty=0;
         gbc.gridwidth=1;
         add(pnlimage,gbc);
 
+        lblimage = new JLabel();
+        pnlimage.add(lblimage,BorderLayout.CENTER);
+
+        JLabel lblblank = new JLabel();
+        gbc.gridy=2;
+        gbc.weightx=0;
+        gbc.weighty=1;
+        add(lblblank,gbc);
+
         pnlinfo = new JPanel(new GridBagLayout());
         pnlinfo.setOpaque(false);
         gbc.gridx=1;
+        gbc.gridy=1;
         gbc.weightx=1;
         gbc.weighty=1;
+        gbc.gridheight=2;
         add(pnlinfo,gbc);
 
 
@@ -110,6 +125,7 @@ public class BuyProductVariant extends JDialog{
         gbc.weightx=0;
         gbc.weighty=0;
         gbc.gridwidth=1;
+        gbc.gridheight=1;
         pnlinfo.add(lblbrand,gbc);
 
         lblmaterial = new JLabel("Chất liệu: "+productbus.getMaterialFromId(p.getMaterialId()).getMaterialName());
@@ -193,10 +209,15 @@ public class BuyProductVariant extends JDialog{
             gbc.gridy=9;
             pnlinfo.add(lblpquantity,gbc);
         
+        JLabel lblprice = new JLabel(Theme.df.format(p.getPrice())+"đ");
+        lblprice.setFont(new Font("Roboto",Font.BOLD,25));
+        gbc.gridy=10;
+        pnlinfo.add(lblprice,gbc);
+
             // BUTTON BUY
         JPanel pnlbtn = new JPanel(new FlowLayout(FlowLayout.LEFT,5,5));
         pnlbtn.setOpaque(false);
-        gbc.gridy=10;
+        gbc.gridy=11;
         pnlinfo.add(pnlbtn,gbc);
 
         btnaddtocart = new RoundedButton("Thêm vào giỏ", 10);
@@ -214,15 +235,22 @@ public class BuyProductVariant extends JDialog{
         btnorder.setEnabled(false);
         pnlbtn.add(btnorder);
 
-        JPanel lblblank = new JPanel();
+        JPanel pnlblank = new JPanel();
         gbc.gridx=1;
         gbc.gridy=0;
-        gbc.gridheight=11;
+        gbc.gridheight=12;
         gbc.weightx=2;
-        pnlinfo.add(lblblank,gbc);
+        pnlinfo.add(pnlblank,gbc);
 
+        JLabel lblblank2 = new JLabel();
+        gbc.gridx=0;
+        gbc.gridy=11;
+        gbc.weightx=1;
+        gbc.weighty=1;;
+        pnlinfo.add(lblblank2,gbc);
         addEvent();
 
+        colorcheckbox.get(0).setSelected(true);
         setVisible(true);
     }
     public int getColorIdFromCheckBox()
@@ -253,6 +281,10 @@ public class BuyProductVariant extends JDialog{
             lblpquantity.setText("Tình trạng:  Còn hàng");
         else lblpquantity.setText("Tình trạng:  Hết hàng");
     }
+    public ProductColor getProductColorFromGUI()
+    {
+        return productvariantbus.getProductColorFromPIdColorId(p.getProductId(), getColorIdFromCheckBox());
+    }
     private void addEvent()
     {
         ItemListener il = new ItemListener() {
@@ -264,6 +296,11 @@ public class BuyProductVariant extends JDialog{
                     lblpquantity.setVisible(true);
                     pnlquan.setEditable(status);
                     loadQuantityStatus(status);
+                }
+                if(e.getSource() instanceof  ColorCheckBox)
+                {
+                    ProductColor pc = getProductColorFromGUI();
+                    loadImage(pc);
                 }
             }
             
@@ -326,13 +363,14 @@ public class BuyProductVariant extends JDialog{
                     }
                     
                 }
-                if(e.getSource() == btnorder)
+                else if(e.getSource() == btnorder)
                 {   
                     List<Cart> cl = new ArrayList<>();
                     cl.add(new Cart(userid,getProductVariantFromGUI().getProductVariantId(),pnlquan.getQuan()));
                     new PayPanel(getOwner(), userid, cl);
                     BuyProductVariant.this.dispose();;
                 }
+                
             }
             
         };
@@ -374,6 +412,17 @@ public class BuyProductVariant extends JDialog{
             pv = productvariantbus.getProductVariantFromPCIdAndSize(pc.getProductColorId(), getSizeFromCheckBox());
         }
         return pv;
+    }
+    public void loadImage(ProductColor pc)
+    {
+        String url = pc.getURL();
+        System.out.println(url);
+        ImageIcon pimage = new ImageIcon(url);
+        pimage.setImage(pimage.getImage().getScaledInstance(300 , 300, Image.SCALE_SMOOTH));
+        lblimage.setIcon(pimage);
+        pnlimage.revalidate();
+        pnlimage.repaint();
+
     }
     
 }
